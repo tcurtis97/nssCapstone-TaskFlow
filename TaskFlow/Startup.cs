@@ -31,6 +31,7 @@ namespace TaskFlow
         {
 
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
+            services.AddTransient<ICustomerRepository, CustomerRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

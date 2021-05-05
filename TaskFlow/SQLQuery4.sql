@@ -1,10 +1,4 @@
-﻿SET IDENTITY_INSERT [UserType] ON
-INSERT INTO [UserType]
-  ([Id], [Name])
-VALUES 
-  (1, 'admin'), 
-  (2, 'user');
-SET IDENTITY_INSERT [UserType] OFF
+﻿
   
 
 SET IDENTITY_INSERT [UserProfile] ON
@@ -15,7 +9,7 @@ VALUES
   (2, 'RaA2XpHASVhJfgSds5nsWiAnPng2', 'admin@admin.com', '2020-03-18', 'Admin', 'Admin', 'Admin');
 SET IDENTITY_INSERT [UserProfile] OFF
 
-
+SET ANSI_WARNINGS  OFF;
 SET IDENTITY_INSERT [Customer] ON
 INSERT INTO [Customer]
   ([Id], [Name], [PhoneNumber])
@@ -23,6 +17,7 @@ VALUES
   (1, 'Mr.Lay', '931-456-4347'),
   (2, 'Mrs.Jones', '931-421-2133')
 SET IDENTITY_INSERT [Customer] OFF
+SET ANSI_WARNINGS  ON;
 
 
 
@@ -35,23 +30,43 @@ VALUES
 SET IDENTITY_INSERT [Address] OFF
 
 
-CREATE TABLE [Job] (
-  [Id] integer PRIMARY KEY IDENTITY,
-  [Decsription] text NOT NULL,
-  [ImageUrl] nvarchar,
-  [CompletionDate] datetime,
-  [CreateDate] datetime NOT NULL,
-  [CustomerId] integer NOT NULL,
-  
 
-  CONSTRAINT [FK_Job_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([Id])
-)
 
 
 SET IDENTITY_INSERT [Job] ON
 INSERT INTO [Job]
-  ([Id],  [Decsription], [ImageUrl], [CompletionDate],  [CreateDate], [CustomerId])
+  ([Id],  [Decsription],  [CreateDate], [CustomerId])
 VALUES
   (1, 'Light bulb change', '2020-01-12', 1)
  
 SET IDENTITY_INSERT [Job] OFF
+
+
+
+SET IDENTITY_INSERT [Note] ON
+INSERT INTO [Note]
+  ([Id],  [UserProfileId], [JobId], [CreateDate],  [NoteText])
+VALUES
+  (1, 1, 1, '2020-07-19', 'Bing pvc glue on the next trip')
+ 
+SET IDENTITY_INSERT [Note] OFF
+
+
+SET IDENTITY_INSERT [WorkDay] ON
+INSERT INTO [WorkDay]
+  ([Id],  [UserProfileId], [JobId])
+VALUES
+  (1, 1, 1)
+ 
+SET IDENTITY_INSERT [WorkDay] OFF
+
+
+SET IDENTITY_INSERT [WorkRecord] ON
+INSERT INTO [WorkRecord]
+  ([Id],  [UserProfileId], [JobId], [CreateDate],  [NoteText], [TimeOnJob])
+VALUES
+  (1, 1, 1, '2020-05-30', 'Arrived on call and found a failed light bulb, I pust in an order for a new light bulb for the next trip out.', 3)
+ 
+SET IDENTITY_INSERT [WorkRecord] OFF
+
+

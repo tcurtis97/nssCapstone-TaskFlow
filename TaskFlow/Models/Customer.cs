@@ -11,11 +11,14 @@ namespace TaskFlow.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        
         public string Name { get; set; }
 
         [Phone]
         public string PhoneNumber { get; set; }
 
+        public List<CustomerAddress> Addresses { get; set; }
+
+        public List<Job> Jobs { get; set; }
     }
 }

@@ -34,8 +34,8 @@ CREATE TABLE [UserProfile] (
 
 CREATE TABLE [Customer] (
   [Id] integer PRIMARY KEY IDENTITY,
-  [Name] nvarchar NOT NULL,
-  [PhoneNumber] nvarchar NOT NULL,
+  [Name] nvarchar(555) NOT NULL,
+  [PhoneNumber] nvarchar(555) NOT NULL,
 )
 
 CREATE TABLE [Address] (
@@ -49,7 +49,7 @@ CREATE TABLE [Address] (
 CREATE TABLE [Job] (
   [Id] integer PRIMARY KEY IDENTITY,
   [Decsription] text NOT NULL,
-  [ImageUrl] nvarchar,
+  [ImageUrl] nvarchar(555),
   [CompletionDate] datetime,
   [CreateDate] datetime NOT NULL,
   [CustomerId] integer NOT NULL,

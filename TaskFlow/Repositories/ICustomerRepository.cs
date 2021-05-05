@@ -10,5 +10,9 @@ namespace TaskFlow.Repositories
         List<Customer> GetAll();
         Customer GetById(int id);
         void Update(Customer customer);
+
+        List<Customer> Search(string criterion, bool sortDescending);
+
+        Customer GetCustomerByIdWithAddressWithJob(int id);
     }
 }

@@ -15,9 +15,9 @@ namespace TaskFlow.Models
 
         public string ImageUrl { get; set; }
 
-        public DateTime ComepletedDate { get; set; }
+        public DateTime CompletionDate { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreateDate { get; set; }
 
     }
 }
