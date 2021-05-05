@@ -19,7 +19,7 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                 SELECT  j.Id, j.Descritpion, ISNULL(j.ImageUrl, 'Missing') as ImageUrl, ISNULL(j.CompletionDate, 'Uncompleted') as CompletionDate, j.CreateDate, j.CustomerId
+                 SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, 'Missing') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId
                           FROM  Job j";
 
                     var reader = cmd.ExecuteReader();
@@ -30,7 +30,7 @@ namespace TaskFlow.Repositories
                         jobs.Add(new Job()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
-                            Descritpion = DbUtils.GetString(reader, "Descritpion"),
+                            Descritpion = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -54,7 +54,7 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                         SELECT  Id, Descritpion, ImageUrl, CompletionDate, CreateDate, CustomerId
+                         SELECT  Id, Description, ImageUrl, CompletionDate, CreateDate, CustomerId
                           FROM  Job
                     WHERE Id = @Id";
 
@@ -68,7 +68,7 @@ namespace TaskFlow.Repositories
                         job = new Job()
                         {
                             Id = id,
-                            Descritpion = DbUtils.GetString(reader, "Descritpion"),
+                            Descritpion = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -93,10 +93,10 @@ namespace TaskFlow.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Job (Descritpion, ImageUrl, CompletionDate, CreateDate, CustomerId)
+                    cmd.CommandText = @"INSERT INTO Job (Description, ImageUrl, CompletionDate, CreateDate, CustomerId)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@Descritpion, @ImageUrl, @CompletionDate, @CreateDate, @CustomerId)";
-                    DbUtils.AddParameter(cmd, "@Descritpion", job.Descritpion);
+                                        VALUES (@Description, @ImageUrl, @CompletionDate, @CreateDate, @CustomerId)";
+                    DbUtils.AddParameter(cmd, "@Description", job.Descritpion);
                     DbUtils.AddParameter(cmd, "@ImageUrl", job.ImageUrl);
                     DbUtils.AddParameter(cmd, "@CompletionDate", job.CompletionDate);
                     DbUtils.AddParameter(cmd, "@CreateDate", job.CreateDate);
@@ -131,14 +131,14 @@ namespace TaskFlow.Repositories
                 {
                     cmd.CommandText = @"
                         UPDATE Job
-                           SET Descritpion = @Descritpion,
+                           SET Description = @Description,
                                 ImageUrl = @ImageUrl
                                 CompletionDate = @CompletionDate
                                 CreateDate = @CreateDate
                                 CustomerId = @CustomerId
                          WHERE Id = @Id";
 
-                    DbUtils.AddParameter(cmd, "@Descritpion", job.Descritpion);
+                    DbUtils.AddParameter(cmd, "@Description", job.Descritpion);
                     DbUtils.AddParameter(cmd, "@ImageUrl", job.ImageUrl);
                     DbUtils.AddParameter(cmd, "@CompletionDate", job.CompletionDate);
                     DbUtils.AddParameter(cmd, "@CreateDate", job.CreateDate);

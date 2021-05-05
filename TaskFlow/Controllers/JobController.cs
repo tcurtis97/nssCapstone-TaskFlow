@@ -10,7 +10,7 @@ using TaskFlow.Repositories;
 
 namespace TaskFlow.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class JobController : ControllerBase

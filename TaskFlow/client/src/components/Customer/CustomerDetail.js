@@ -32,11 +32,11 @@ const CustomerDetails = () => {
         <strong>{customer.phoneNumber}</strong>
       </CardHeader>
 
-      {customer.Addresses.map((a) => (
+      {customer.addresses.map((a) => (
         <CustomerAddress key={a.id} address={a} />
       ))}
 
-      {customer.Jobs.map((j) => (
+      {customer.jobs.map((j) => (
         <CustomerJob key={j.id} job={j} />
       ))}
     </div>

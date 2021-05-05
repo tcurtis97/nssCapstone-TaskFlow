@@ -10,9 +10,9 @@ using TaskFlow.Repositories;
 
 namespace TaskFlow.Controllers
 {
-   
-        [Authorize]
-        [Route("api/[controller]")]
+
+    //[Authorize]
+    [Route("api/[controller]")]
         [ApiController]
         public class CustomerController : ControllerBase
         {

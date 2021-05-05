@@ -5,7 +5,7 @@ export const JobContext = React.createContext();
 
 export const JobProvider = (props) => {
   const { getToken } = useContext(UserProfileContext);
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setjobs] = useState([]);
   console.log(jobs);
 
   const getAllJobs = () => {
@@ -17,7 +17,7 @@ export const JobProvider = (props) => {
         },
       })
         .then((res) => res.json())
-        .then(setJobs)
+        .then(setjobs)
     );
   };
 
