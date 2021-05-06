@@ -85,8 +85,17 @@ namespace TaskFlow.Controllers
         }
 
 
-    
-    
+        [HttpGet("getCustomersWithAddress")]
+        public IActionResult getCustomersWithAddress()
+        {
+            return Ok(_customerRepository.getCustomersWithAddress());
+        }
+        
+
+
+
+
+
     }
     
 

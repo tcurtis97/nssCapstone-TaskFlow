@@ -101,7 +101,9 @@ export const JobForm = () => {
           />
           <datalist id="customerData">
             {customers.map((c) => (
-              <option key={c.Id} value={c.id} />
+              <option key={c.Id} value={c.id}>
+                {c.name}
+              </option>
             ))}
           </datalist>
           ))

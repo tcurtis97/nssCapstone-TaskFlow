@@ -27,6 +27,9 @@ const Job = ({ job }) => {
         <p>
           <strong>{job.CompletionDate}</strong>
         </p>
+        <Link to={`/job/${job.id}`}>
+          <Button type="button">Details</Button>
+        </Link>
         <Link to={`/job/edit/${job.id}`}>
           <Button type="button">Edit</Button>
         </Link>
