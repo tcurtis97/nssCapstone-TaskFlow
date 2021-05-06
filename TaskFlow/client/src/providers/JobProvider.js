@@ -6,7 +6,6 @@ export const JobContext = React.createContext();
 export const JobProvider = (props) => {
   const { getToken } = useContext(UserProfileContext);
   const [jobs, setjobs] = useState([]);
-  console.log(jobs);
 
   const getAllJobs = () => {
     return getToken().then((token) =>

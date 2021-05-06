@@ -19,8 +19,20 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                 SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, 'Missing') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId
-                          FROM  Job j";
+                 SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate,
+                           j.CreateDate, j.CustomerId, j.AddressId,
+
+                            c.Id AS CustomerId, c.[Name], c.PhoneNumber,
+
+
+                                 a.Id AS AddressId, a.CustomerId, a.Address
+
+
+
+                          FROM  Job j
+                    LEFT JOIN Address a ON j.AddressId = a.Id
+                     LEFT JOIN Customer c ON j.CustomerId = c.Id
+                    ";
 
                     var reader = cmd.ExecuteReader();
 
@@ -35,6 +47,17 @@ namespace TaskFlow.Repositories
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
                             CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            Customer = new Customer()
+                            {
+                                Id = DbUtils.GetInt(reader, "CustomerId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                            },
+                            Address = new CustomerAddress()
+                            {
+                                Id = DbUtils.GetInt(reader, "AddressId"),
+                                Address = DbUtils.GetString(reader, "Address"),
+                            },
 
                         });
                     }

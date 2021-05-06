@@ -17,7 +17,12 @@ namespace TaskFlow.Models
 
         public DateTime CompletionDate { get; set; }
 
+
         public DateTime CreateDate { get; set; }
+
+        public Customer Customer { get; set; }
+
+        public CustomerAddress Address { get; set; }
 
     }
 }

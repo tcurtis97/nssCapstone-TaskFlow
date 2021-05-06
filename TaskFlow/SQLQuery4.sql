@@ -35,9 +35,9 @@ SET IDENTITY_INSERT [Address] OFF
 
 SET IDENTITY_INSERT [Job] ON
 INSERT INTO [Job]
-  ([Id],  [Description],  [CreateDate], [CustomerId])
+  ([Id],  [Description],  [CreateDate], [CustomerId], [AddressId])
 VALUES
-  (1, 'Light bulb change', '2020-01-12', 1)
+  (1, 'Light bulb change', '2020-01-12', 1, 1)
  
 SET IDENTITY_INSERT [Job] OFF
 

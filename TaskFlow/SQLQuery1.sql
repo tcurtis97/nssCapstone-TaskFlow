@@ -53,9 +53,11 @@ CREATE TABLE [Job] (
   [CompletionDate] datetime,
   [CreateDate] datetime NOT NULL,
   [CustomerId] integer NOT NULL,
+  [AddressId] integer NOT NULL,
   
 
-  CONSTRAINT [FK_Job_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([Id])
+  CONSTRAINT [FK_Job_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([Id]),
+  CONSTRAINT [FK_Job_Address] FOREIGN KEY ([AddressId]) REFERENCES [Address] ([Id])
 )
 
 CREATE TABLE [WorkDay] (

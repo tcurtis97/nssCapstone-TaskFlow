@@ -9,7 +9,7 @@ import { CustomerForm } from "./Customer/CustomerForm";
 import JobList from "./Job/JobList";
 import SearchCustomer from "./Customer/SearchCustomer";
 import CustomerDetail from "./Customer/CustomerDetail";
-import JobForm from "./Job/JobForm";
+import { JobForm } from "./Job/JobForm";
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);

@@ -53,3 +53,4 @@ C:\Users\Tim\workspace\csharp\TaskFlow\TaskFlow\bin\Debug\net5.0\client\public\m
 C:\Users\Tim\workspace\csharp\TaskFlow\TaskFlow\bin\Debug\net5.0\TaskFlow-client\taskflow\package-lock.json
 C:\Users\Tim\workspace\csharp\TaskFlow\TaskFlow\bin\Debug\net5.0\TaskFlow-client\taskflow\package.json
 C:\Users\Tim\workspace\csharp\TaskFlow\TaskFlow\bin\Debug\net5.0\TaskFlow-client\taskflow\public\manifest.json
+C:\Users\Tim\workspace\csharp\TaskFlow\TaskFlow\bin\Debug\net5.0\libman.json
