@@ -10,7 +10,7 @@ using TaskFlow.Repositories;
 
 namespace TaskFlow.Controllers
 {
-    [Authorize]
+    
     [Route("api/[controller]")]
     [ApiController]
     public class AddressController : ControllerBase
@@ -56,7 +56,16 @@ namespace TaskFlow.Controllers
         }
 
 
-        
+        [HttpGet("GetAllAddressesByCustomerId{id}")]
+        public IActionResult GetAllAddressesByCustomerId(int id)
+        {
+            var addresses = _addressRepository.GetAllAddressesByCustomerId(id);
+            if (addresses == null)
+            {
+                return NotFound();
+            }
+            return Ok(addresses);
+        }
 
 
 

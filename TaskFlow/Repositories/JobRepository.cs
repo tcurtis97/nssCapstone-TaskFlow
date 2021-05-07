@@ -244,6 +244,47 @@ namespace TaskFlow.Repositories
             }
         }
 
+        public List<Job> GetAllJobsByCustomerId(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT   j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, 
+                                 ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId
+                                        
+
+                                        FROM Job j
+                                        LEFT JOIN Customer c on c.id = j.CustomerId
+                                        WHERE j.CustomerId = @id
+                                        ";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    var reader = cmd.ExecuteReader();
+                    var jobs = new List<Job>();
+                    while (reader.Read())
+                    {
+                        jobs.Add(new Job()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                            CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                        });
+                    }
+
+                    reader.Close();
+
+                    return jobs;
+                }
+            }
+        }
+
+
+
 
 
 

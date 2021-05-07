@@ -1,26 +1,41 @@
 import React, { useEffect, useContext, useState } from "react";
 import { CustomerContext } from "../../providers/CustomerProvider";
-
+import { AddressContext } from "../../providers/AddressProvider";
+import { JobContext } from "../../providers/JobProvider";
 import { useParams } from "react-router-dom";
 import CustomerAddress from "./CustomerAddress";
 import CustomerJob from "./CustomerJob";
 import { Link } from "react-router-dom";
 import { CardHeader } from "reactstrap";
+import { Button } from "reactstrap";
 
 const CustomerDetails = () => {
-  const [customer, SetCustomer] = useState({
-    addresses: [],
-    jobs: [],
-  });
+  const [customer, SetCustomer] = useState({});
+  const [addresses, SetAddresses] = useState([]);
+  const [jobs, SetJobs] = useState([]);
 
-  const { getCustomerByIdWithAddressWithJob } = useContext(CustomerContext);
+  const { getCustomerById } = useContext(CustomerContext);
+  const { GetAllAddressesByCustomerId } = useContext(AddressContext);
+  const { GetAllJobsByCustomerId } = useContext(JobContext);
 
   const { id } = useParams();
 
   useEffect(() => {
     console.log("useEffect", id);
-    getCustomerByIdWithAddressWithJob(id).then((response) => {
+    getCustomerById(id).then((response) => {
       SetCustomer(response);
+    });
+  }, []);
+
+  useEffect(() => {
+    GetAllAddressesByCustomerId(id).then((response) => {
+      SetAddresses(response);
+    });
+  }, []);
+
+  useEffect(() => {
+    GetAllJobsByCustomerId(id).then((response) => {
+      SetJobs(response);
     });
   }, []);
 
@@ -36,18 +51,18 @@ const CustomerDetails = () => {
       </CardHeader>
 
       <CardHeader>
-        <Link to={`/address/add`}>
+        <Link to={`/address/add/${customer.id}`}>
           <Button type="button">Add address</Button>
         </Link>
         <strong>Addresses:</strong>
-        {customer.addresses.map((a) => (
+        {addresses.map((a) => (
           <CustomerAddress key={a.id} address={a} />
         ))}
       </CardHeader>
 
       <CardHeader>
         <strong>Jobs:</strong>
-        {customer.jobs.map((j) => (
+        {jobs.map((j) => (
           <CustomerJob key={j.id} job={j} />
         ))}{" "}
       </CardHeader>

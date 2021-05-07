@@ -21,7 +21,7 @@ namespace TaskFlow.Repositories
                     cmd.CommandText = @"
                  SELECT  Id, CustomerId, Address
                           FROM  Address
-                      ORDER BY  Name";
+                     ";
 
                     var reader = cmd.ExecuteReader();
 
@@ -103,7 +103,40 @@ namespace TaskFlow.Repositories
             }
         }
 
+        public List<CustomerAddress> GetAllAddressesByCustomerId(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT  a.Id, a.CustomerId, a.Address
+                                        
 
+                                        FROM Address a
+                                        LEFT JOIN Customer c on c.id = a.customerId
+                                        WHERE a.CustomerId = @id
+                                        ";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    var reader = cmd.ExecuteReader();
+                    var addresses = new List<CustomerAddress>();
+                    while (reader.Read())
+                    {
+                        addresses.Add(new CustomerAddress()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            Address = DbUtils.GetString(reader, "Address"),
+                        });
+                    }
+
+                    reader.Close();
+
+                    return addresses;
+                }
+            }
+        }
 
 
 

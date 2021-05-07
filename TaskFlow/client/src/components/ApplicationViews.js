@@ -50,7 +50,7 @@ export default function ApplicationViews() {
         </Route>
 
         {/* Address ROUTES */}
-        <Route path="/address/add" exact>
+        <Route path="/address/add/:customerId(\d+)" exact>
           {isLoggedIn ? <AddressForm /> : <Redirect to="/login" />}
         </Route>
 

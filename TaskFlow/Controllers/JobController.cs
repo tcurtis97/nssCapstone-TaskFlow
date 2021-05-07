@@ -75,7 +75,16 @@ namespace TaskFlow.Controllers
             return Ok(job);
         }
 
-
+        [HttpGet("GetAllJobsByCustomerId{id}")]
+        public IActionResult GetAllJobsByCustomerId(int id)
+        {
+            var job = _jobRepository.GetAllJobsByCustomerId(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            return Ok(job);
+        }
 
 
 

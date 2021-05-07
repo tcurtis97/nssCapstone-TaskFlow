@@ -9,5 +9,6 @@ namespace TaskFlow.Repositories
         void Delete(int addressId);
         List<CustomerAddress> GetAll();
         void Update(CustomerAddress address);
+        List<CustomerAddress> GetAllAddressesByCustomerId(int id);
     }
 }
