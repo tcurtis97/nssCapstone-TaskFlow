@@ -152,7 +152,45 @@ namespace TaskFlow.Repositories
         }
 
 
+        public List<Note> GetAllNotesByJobId(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT   n.Id, n.UserProfileId, n.JobId, n.CreateDate, n.NoteText, u.Id, u.DisplayName
+                                                    FROM  Note n
+                                                    LEFT JOIN UserProfile u ON n.UserProfileId = u.Id
+                                                    WHERE n.JobId = @id
+                                        ";
+                    cmd.Parameters.AddWithValue("@id", id);
 
+                    var reader = cmd.ExecuteReader();
+                    var notes = new List<Note>();
+                    while (reader.Read())
+                    {
+                        notes.Add(new Note()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                            JobId = DbUtils.GetInt(reader, "JobId"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                            NoteText = DbUtils.GetString(reader, "NoteText"),
+                            userProfile = new UserProfile()
+                            {
+                                Id = DbUtils.GetInt(reader, "UserProfileId"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
+                            },
+                        });
+                    }
+
+                    reader.Close();
+
+                    return notes;
+                }
+            }
+        }
 
 
 

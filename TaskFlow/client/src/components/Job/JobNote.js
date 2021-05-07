@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import { Button } from "reactstrap";
 import { Link } from "react-router-dom";
 
-const Customer = ({ note }) => {
+const JobNote = ({ note }) => {
   const { deleteNote } = useContext(NoteContext);
 
   const NoteDelete = () => {
@@ -39,4 +39,4 @@ const Customer = ({ note }) => {
   );
 };
 
-export default Customer;
+export default JobNote;

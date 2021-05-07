@@ -8,18 +8,21 @@ import { CustomerProvider } from "./providers/CustomerProvider";
 import Header from "./components/Header";
 import { JobProvider } from "./providers/JobProvider";
 import { AddressProvider } from "./providers/AddressProvider";
+import { NoteProvider } from "./providers/NoteProvider";
 
 function App() {
   return (
     <Router>
       <UserProfileProvider>
         <JobProvider>
-          <CustomerProvider>
-            <AddressProvider>
-              <Header />
-              <ApplicationViews />
-            </AddressProvider>
-          </CustomerProvider>
+          <NoteProvider>
+            <CustomerProvider>
+              <AddressProvider>
+                <Header />
+                <ApplicationViews />
+              </AddressProvider>
+            </CustomerProvider>
+          </NoteProvider>
         </JobProvider>
       </UserProfileProvider>
     </Router>

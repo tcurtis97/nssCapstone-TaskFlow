@@ -64,7 +64,16 @@ namespace TaskFlow.Controllers
             return NoContent();
         }
 
-
+        [HttpGet("GetAllNotesByJobId{id}")]
+        public IActionResult GetAllNotesByJobId(int id)
+        {
+            var note = _noteRepository.GetAllNotesByJobId(id);
+            if (note == null)
+            {
+                return NotFound();
+            }
+            return Ok(note);
+        }
 
 
 
