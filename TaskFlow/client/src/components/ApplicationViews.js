@@ -9,7 +9,8 @@ import { CustomerForm } from "./Customer/CustomerForm";
 import JobList from "./Job/JobList";
 import SearchCustomer from "./Customer/SearchCustomer";
 import CustomerDetail from "./Customer/CustomerDetail";
-import JobForm from "./Job/JobForm";
+import { JobForm } from "./Job/JobForm";
+import JobDetail from "./Job/JobDetail";
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);
@@ -42,6 +43,9 @@ export default function ApplicationViews() {
         </Route>
         <Route path="/job/add" exact>
           {isLoggedIn ? <JobForm /> : <Redirect to="/login" />}
+        </Route>
+        <Route path="/job/:id(\d+)" exact>
+          {isLoggedIn ? <JobDetail /> : <Redirect to="/login" />}
         </Route>
 
         <Route path="/login">

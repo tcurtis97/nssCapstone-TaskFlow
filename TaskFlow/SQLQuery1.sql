@@ -41,21 +41,23 @@ CREATE TABLE [Customer] (
 CREATE TABLE [Address] (
   [Id] integer PRIMARY KEY IDENTITY,
   [CustomerId] integer NOT NULL,
-  [Address] nvarchar NOT NULL, 
+  [Address] nvarchar(555) NOT NULL, 
 
   CONSTRAINT [FK_Address_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([Id]),
 )
 
 CREATE TABLE [Job] (
   [Id] integer PRIMARY KEY IDENTITY,
-  [Decsription] text NOT NULL,
+  [Description] text NOT NULL,
   [ImageUrl] nvarchar(555),
   [CompletionDate] datetime,
   [CreateDate] datetime NOT NULL,
   [CustomerId] integer NOT NULL,
+  [AddressId] integer NOT NULL,
   
 
-  CONSTRAINT [FK_Job_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([Id])
+  CONSTRAINT [FK_Job_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer] ([Id]),
+  CONSTRAINT [FK_Job_Address] FOREIGN KEY ([AddressId]) REFERENCES [Address] ([Id])
 )
 
 CREATE TABLE [WorkDay] (

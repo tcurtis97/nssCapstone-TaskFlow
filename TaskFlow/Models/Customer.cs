@@ -20,5 +20,7 @@ namespace TaskFlow.Models
         public List<CustomerAddress> Addresses { get; set; }
 
         public List<Job> Jobs { get; set; }
+
+        public CustomerAddress Address { get; set; }
     }
 }

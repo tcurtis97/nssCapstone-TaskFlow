@@ -14,5 +14,7 @@ namespace TaskFlow.Repositories
         List<Customer> Search(string criterion, bool sortDescending);
 
         Customer GetCustomerByIdWithAddressWithJob(int id);
+
+        List<Customer> getCustomersWithAddress();
     }
 }

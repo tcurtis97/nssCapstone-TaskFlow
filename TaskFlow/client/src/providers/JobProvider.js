@@ -5,8 +5,8 @@ export const JobContext = React.createContext();
 
 export const JobProvider = (props) => {
   const { getToken } = useContext(UserProfileContext);
-  const [jobs, setJobs] = useState([]);
-  console.log(jobs);
+  const [jobs, setjobs] = useState([]);
+  const [viewingUncomplete, setViewingUncomplete] = useState(false);
 
   const getAllJobs = () => {
     return getToken().then((token) =>
@@ -17,7 +17,7 @@ export const JobProvider = (props) => {
         },
       })
         .then((res) => res.json())
-        .then(setJobs)
+        .then(setjobs)
     );
   };
 
@@ -69,6 +69,30 @@ export const JobProvider = (props) => {
     );
   };
 
+  const getUncompleteJobs = () => {
+    return getToken().then((token) =>
+      fetch(`/api/job/UncomepleteJobs`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then(jobs)
+    );
+  };
+
+  const GetJobByIdWithDetails = (id) => {
+    return getToken().then((token) =>
+      fetch(`/api/job/GetJobByIdWithDetails${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json())
+    );
+  };
+
   return (
     <JobContext.Provider
       value={{
@@ -78,6 +102,10 @@ export const JobProvider = (props) => {
         deleteJob,
         updateJob,
         getJobById,
+        viewingUncomplete,
+        setViewingUncomplete,
+        getUncompleteJobs,
+        GetJobByIdWithDetails,
       }}
     >
       {props.children}

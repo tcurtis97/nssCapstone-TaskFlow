@@ -10,9 +10,9 @@ using TaskFlow.Repositories;
 
 namespace TaskFlow.Controllers
 {
-   
-        [Authorize]
-        [Route("api/[controller]")]
+
+    //[Authorize]
+    [Route("api/[controller]")]
         [ApiController]
         public class CustomerController : ControllerBase
         {
@@ -85,8 +85,17 @@ namespace TaskFlow.Controllers
         }
 
 
-    
-    
+        [HttpGet("getCustomersWithAddress")]
+        public IActionResult getCustomersWithAddress()
+        {
+            return Ok(_customerRepository.getCustomersWithAddress());
+        }
+        
+
+
+
+
+
     }
     
 

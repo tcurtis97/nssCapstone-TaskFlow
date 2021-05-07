@@ -14,8 +14,11 @@ const CustomerJob = ({ job }) => {
 
   return (
     <Card className="m-4">
+      <CardHeader>
+        <strong>{job.descritpion}</strong>
+      </CardHeader>
       <CardBody>
-        <CardText></CardText>
+        <CardText>{job.createDate}</CardText>
         <Link to={`/Job/edit/${job.id}`}>
           <Button type="button">Edit</Button>
         </Link>

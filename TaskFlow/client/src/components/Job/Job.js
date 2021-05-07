@@ -16,14 +16,20 @@ const Job = ({ job }) => {
     <Card className="m-4">
       <CardBody>
         <p>
-          <strong>{job.description}</strong>
+          <strong>{job.customer.name}</strong>
         </p>
         <p>
-          <strong>{job.imageUrl}</strong>
+          <strong>{job.address.address}</strong>
+        </p>
+        <p>
+          <strong>Description : {job.descritpion}</strong>
         </p>
         <p>
           <strong>{job.CompletionDate}</strong>
         </p>
+        <Link to={`/job/${job.id}`}>
+          <Button type="button">Details</Button>
+        </Link>
         <Link to={`/job/edit/${job.id}`}>
           <Button type="button">Edit</Button>
         </Link>

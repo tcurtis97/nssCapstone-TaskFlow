@@ -6,6 +6,8 @@ export const CustomerContext = React.createContext();
 export const CustomerProvider = (props) => {
   const { getToken } = useContext(UserProfileContext);
   const [customers, setCustomers] = useState([]);
+
+  const [customersWithAddress, setCustomersWithAddress] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
 
   const getAllCustomers = () => {
@@ -93,6 +95,19 @@ export const CustomerProvider = (props) => {
     );
   };
 
+  const getCustomersWithAddress = () => {
+    return getToken().then((token) =>
+      fetch(`/api/customer/GetCustomersWithAddress`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then(setCustomersWithAddress)
+    );
+  };
+
   return (
     <CustomerContext.Provider
       value={{
@@ -106,6 +121,9 @@ export const CustomerProvider = (props) => {
         setSearchTerms,
         searchCustomers,
         getCustomerByIdWithAddressWithJob,
+        customersWithAddress,
+        setCustomersWithAddress,
+        getCustomersWithAddress,
       }}
     >
       {props.children}

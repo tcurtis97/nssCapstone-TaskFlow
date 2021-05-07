@@ -185,10 +185,10 @@ namespace TaskFlow.Repositories
                     cmd.CommandText = @"
                           SELECT c.[Name], c.PhoneNumber,
 
-                                 a.Id, a.CustomerId, a.Address,
+                                 a.Id AS AddressId, a.CustomerId, a.Address,
 
-                                 j.Id AS JobId, j.Descritpion, ISNULL(j.ImageUrl, 'Missing') as ImageUrl, 
-                                 ISNULL(j.CompletionDate, 'Uncompleted') as CompletionDate, j.CreateDate, j.CustomerId
+                                 j.Id AS JobId, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, 
+                                 ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId
                             
                             FROM Customer c
                             LEFT JOIN Address a ON a.CustomerId = c.Id
@@ -227,7 +227,7 @@ namespace TaskFlow.Repositories
                                 customer.Jobs.Add(new Job()
                                 {
                                     Id = DbUtils.GetInt(reader, "JobId"),
-                                    Descritpion = DbUtils.GetString(reader, "Descritpion"),
+                                    Descritpion = DbUtils.GetString(reader, "Description"),
                                     ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                                     CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                                     CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -244,21 +244,62 @@ namespace TaskFlow.Repositories
             }
         }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+        public List<Customer> getCustomersWithAddress()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                 SELECT  c.Id AS CustomerId, c.[Name], c.PhoneNumber,
+
+                                 a.Id AS AddressId, a.CustomerId, a.Address
+
+                          FROM  Customer c
+                          LEFT JOIN Address a ON a.CustomerId = c.Id
+                      ORDER BY  Name";
+
+                    var reader = cmd.ExecuteReader();
+
+                    var customers = new List<Customer>();
+                    while (reader.Read())
+                    {
+                        customers.Add(new Customer()
+                        {
+                            Id = DbUtils.GetInt(reader, "CustomerId"),
+                            Name = DbUtils.GetString(reader, "Name"),
+                            PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                            Address = new CustomerAddress()
+                            {
+                                Id = DbUtils.GetInt(reader, "AddressId"),
+                                CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                                Address = DbUtils.GetString(reader, "Address"),
+                            },
+                        });
+                    }
+
+                    reader.Close();
+
+                    return customers;
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 }

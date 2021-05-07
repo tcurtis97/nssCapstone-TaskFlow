@@ -7,6 +7,7 @@ namespace TaskFlow.Models
 {
     public class Job
     {
+
         public int Id { get; set; }
 
         public int CustomerId { get; set; }
@@ -17,7 +18,13 @@ namespace TaskFlow.Models
 
         public DateTime CompletionDate { get; set; }
 
+
         public DateTime CreateDate { get; set; }
 
+        public Customer Customer { get; set; }
+
+        public CustomerAddress Address { get; set; }
+
+        public List<Note> notes;
     }
 }
