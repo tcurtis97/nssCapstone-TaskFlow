@@ -6,7 +6,9 @@ import { useHistory, useParams } from "react-router-dom";
 
 export const JobForm = () => {
   const { addJob, getJobById, updateJob, getAllJobs } = useContext(JobContext);
-  const { customers, getAllCustomers } = useContext(CustomerContext);
+  const { customersWithAddress, getCustomersWithAddress } = useContext(
+    CustomerContext
+  );
 
   const [job, setJob] = useState({});
 
@@ -36,7 +38,7 @@ export const JobForm = () => {
   };
 
   useEffect(() => {
-    getAllCustomers();
+    getCustomersWithAddress();
   }, []);
 
   return (
@@ -86,7 +88,7 @@ export const JobForm = () => {
           </div>
         </fieldset>
 
-        <FormGroup>
+        {/* <FormGroup>
           <Label htmlFor="Customers">Customers:</Label>
           <Input
             type="text"
@@ -100,13 +102,26 @@ export const JobForm = () => {
             list="customerData"
           />
           <datalist id="customerData">
-            {customers.map((c) => (
-              <option key={c.Id} value={c.id}>
-                {c.name}
+            {customersWithAddress.map((c) => (
+              <option key={c.Id} value={c}>
+                {c.name} - {c.address.address}
               </option>
             ))}
           </datalist>
           ))
+        </FormGroup> */}
+
+        <FormGroup>
+          <div id="Dropdown" class="dropdown-content">
+            {/* <input type="text" id="userInput" onkeyup="Func()" /> */}
+            <select>
+              {customersWithAddress.map((c) => (
+                <option key={c.Id} value={c}>
+                  {c.name} - {c.address.address}
+                </option>
+              ))}
+            </select>
+          </div>
         </FormGroup>
 
         <Button

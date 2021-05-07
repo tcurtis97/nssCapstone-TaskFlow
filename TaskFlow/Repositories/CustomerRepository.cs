@@ -260,8 +260,8 @@ namespace TaskFlow.Repositories
                                  a.Id AS AddressId, a.CustomerId, a.Address
 
                           FROM  Customer c
-                          LEFT JOIN Address a ON a.CustomerId = c.Id
-                      ORDER BY  Name";
+                           JOIN Address a ON a.CustomerId = c.Id
+                      ";
 
                     var reader = cmd.ExecuteReader();
 

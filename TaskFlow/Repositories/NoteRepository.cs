@@ -8,7 +8,7 @@ using TaskFlow.Utils;
 
 namespace TaskFlow.Repositories
 {
-    public class NoteRepository : BaseRepository
+    public class NoteRepository : BaseRepository, INoteRepository
     {
         public NoteRepository(IConfiguration configuration) : base(configuration) { }
         public List<Note> GetAll()
@@ -19,8 +19,9 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                 SELECT  Id, UserProfileId, JobId, Date, NoteText
-                          FROM  Note";
+                 SELECT  n.Id, n.UserProfileId, n.JobId, n.CreateDate, n.NoteText, u.Id, u.DisplayName
+                          FROM  Note n
+                            LEFT JOIN UserProfile u ON n.UserProfileId = u.Id";
 
                     var reader = cmd.ExecuteReader();
 
@@ -32,8 +33,13 @@ namespace TaskFlow.Repositories
                             Id = DbUtils.GetInt(reader, "Id"),
                             UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                             JobId = DbUtils.GetInt(reader, "JobId"),
-                            CreateDate = DbUtils.GetDateTime(reader, "Date"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
                             NoteText = DbUtils.GetString(reader, "NoteText"),
+                            userProfile = new UserProfile()
+                            {
+                                Id = DbUtils.GetInt(reader, "UserProfileId"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
+                            },
 
                         });
                     }
@@ -53,7 +59,7 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                          SELECT  UserProfileId, JobId, Date, NoteText
+                          SELECT  UserProfileId, JobId, CreateDate, NoteText
                             FROM Note 
                            WHERE Id = @Id";
 
@@ -69,9 +75,9 @@ namespace TaskFlow.Repositories
                             Id = id,
                             UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                             JobId = DbUtils.GetInt(reader, "JobId"),
-                            CreateDate = DbUtils.GetDateTime(reader, "Date"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
                             NoteText = DbUtils.GetString(reader, "NoteText"),
-                            
+
 
                         };
                     }
@@ -92,12 +98,12 @@ namespace TaskFlow.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Note (UserProfileId, JobId, Date, NoteText)
+                    cmd.CommandText = @"INSERT INTO Note (UserProfileId, JobId, CreateDate, NoteText)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@UserProfileId, @JobId, @Date, @NoteText)";
+                                        VALUES (@UserProfileId, @JobId, @CreateDate, @NoteText)";
                     DbUtils.AddParameter(cmd, "@UserProfileId", note.UserProfileId);
                     DbUtils.AddParameter(cmd, "@JobId", note.JobId);
-                    DbUtils.AddParameter(cmd, "@Date", note.CreateDate);
+                    DbUtils.AddParameter(cmd, "@CreateDate", note.CreateDate);
                     DbUtils.AddParameter(cmd, "@NoteText", note.NoteText);
 
 
@@ -131,13 +137,13 @@ namespace TaskFlow.Repositories
                         UPDATE Note
                            SET UserProfileId = @UserProfileId,
                                 JobId = @JobId
-                                Date = @Date
+                                CreateDate = @CreateDate
                                 NoteText = @NoteText
                          WHERE Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@UserProfileId", note.UserProfileId);
                     DbUtils.AddParameter(cmd, "@JobId", note.JobId);
-                    DbUtils.AddParameter(cmd, "@Date", note.CreateDate);
+                    DbUtils.AddParameter(cmd, "@CreateDate", note.CreateDate);
                     DbUtils.AddParameter(cmd, "@NoteText", note.NoteText);
 
                     cmd.ExecuteNonQuery();
@@ -145,10 +151,10 @@ namespace TaskFlow.Repositories
             }
         }
 
-      
 
 
-       
+
+
 
 
 

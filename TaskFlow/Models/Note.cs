@@ -17,6 +17,8 @@ namespace TaskFlow.Models
 
         public string NoteText { get; set; }
 
-        
+        public UserProfile userProfile { get; set; }
+
+
     }
 }

@@ -216,7 +216,7 @@ namespace TaskFlow.Repositories
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
                             CustomerId = DbUtils.GetInt(reader, "CustomerId"),
-                            notes = new List<Note>(),
+                          
                             Address = new CustomerAddress()
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
@@ -231,17 +231,7 @@ namespace TaskFlow.Repositories
                             },
                         };
 
-                        if (DbUtils.IsNotDbNull(reader, "NoteId"))
-                        {
-                            job.notes.Add(new Note()
-                            {
-                                Id = DbUtils.GetInt(reader, "NoteId"),
-                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
-                                JobId = DbUtils.GetInt(reader, "JobId"),
-                                CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
-                                NoteText = DbUtils.GetString(reader, "NoteText"),
-                            });
-                        }
+                      
 
 
 

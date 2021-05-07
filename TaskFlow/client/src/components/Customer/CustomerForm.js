@@ -74,25 +74,25 @@ export const CustomerForm = () => {
     });
   }, []);
 
-  const [fields, setFields] = useState([{ value: null }]);
+  // const [fields, setFields] = useState([{ value: null }]);
 
-  function handleAdd() {
-    const values = [...fields];
-    values.push({ value: null });
-    setFields(values);
-  }
+  // function handleAdd() {
+  //   const values = [...fields];
+  //   values.push({ value: null });
+  //   setFields(values);
+  // }
 
-  function handleRemove(i) {
-    const values = [...fields];
-    values.splice(i, 1);
-    setFields(values);
-  }
+  // function handleRemove(i) {
+  //   const values = [...fields];
+  //   values.splice(i, 1);
+  //   setFields(values);
+  // }
 
-  function handleChange(i, event) {
-    const values = [...fields];
-    values[i].value = event.target.value;
-    setFields(values);
-  }
+  // function handleChange(i, event) {
+  //   const values = [...fields];
+  //   values[i].value = event.target.value;
+  //   setFields(values);
+  // }
 
   return (
     <Form className="customerForm">
@@ -143,7 +143,7 @@ export const CustomerForm = () => {
           </div>
         </fieldset>
 
-        <Button type="button" onClick={() => handleAdd()}>
+        {/* <Button type="button" onClick={() => handleAdd()}>
           +
         </Button>
         {fields.map((field, idx) => {
@@ -160,7 +160,7 @@ export const CustomerForm = () => {
               </Button>
             </div>
           );
-        })}
+        })} */}
 
         <Button
           style={{

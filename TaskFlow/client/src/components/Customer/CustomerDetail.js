@@ -36,6 +36,9 @@ const CustomerDetails = () => {
       </CardHeader>
 
       <CardHeader>
+        <Link to={`/address/add`}>
+          <Button type="button">Add address</Button>
+        </Link>
         <strong>Addresses:</strong>
         {customer.addresses.map((a) => (
           <CustomerAddress key={a.id} address={a} />
