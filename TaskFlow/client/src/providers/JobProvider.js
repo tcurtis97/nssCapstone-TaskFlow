@@ -82,6 +82,17 @@ export const JobProvider = (props) => {
     );
   };
 
+  const GetJobByIdWithDetails = (id) => {
+    return getToken().then((token) =>
+      fetch(`/api/job/GetJobByIdWithDetails${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json())
+    );
+  };
+
   return (
     <JobContext.Provider
       value={{
@@ -94,6 +105,7 @@ export const JobProvider = (props) => {
         viewingUncomplete,
         setViewingUncomplete,
         getUncompleteJobs,
+        GetJobByIdWithDetails,
       }}
     >
       {props.children}

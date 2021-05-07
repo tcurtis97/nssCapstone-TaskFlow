@@ -7,6 +7,7 @@ namespace TaskFlow.Models
 {
     public class Job
     {
+
         public int Id { get; set; }
 
         public int CustomerId { get; set; }
@@ -24,5 +25,6 @@ namespace TaskFlow.Models
 
         public CustomerAddress Address { get; set; }
 
+        public List<Note> notes;
     }
 }

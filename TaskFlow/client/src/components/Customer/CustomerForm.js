@@ -12,6 +12,8 @@ export const CustomerForm = () => {
     getAllCustomers,
   } = useContext(CustomerContext);
 
+  const { addAddress } = useContext(CustomerContext);
+
   const [customer, setCustomer] = useState({
     Name: "",
     PhoneNumber: "",
@@ -51,6 +53,10 @@ export const CustomerForm = () => {
           Name: customer.Name,
           PhoneNumber: customer.PhoneNumber,
         }).then(() => history.push(`/customer`));
+        // for (values of fields) {
+        //   addAddress({
+        //     Address: values.value,
+        //   })
       }
     }
   };
@@ -67,6 +73,26 @@ export const CustomerForm = () => {
       }
     });
   }, []);
+
+  const [fields, setFields] = useState([{ value: null }]);
+
+  function handleAdd() {
+    const values = [...fields];
+    values.push({ value: null });
+    setFields(values);
+  }
+
+  function handleRemove(i) {
+    const values = [...fields];
+    values.splice(i, 1);
+    setFields(values);
+  }
+
+  function handleChange(i, event) {
+    const values = [...fields];
+    values[i].value = event.target.value;
+    setFields(values);
+  }
 
   return (
     <Form className="customerForm">
@@ -116,6 +142,25 @@ export const CustomerForm = () => {
             />
           </div>
         </fieldset>
+
+        <Button type="button" onClick={() => handleAdd()}>
+          +
+        </Button>
+        {fields.map((field, idx) => {
+          return (
+            <div key={`${field}-${idx}`}>
+              <Input
+                type="text"
+                value={field.value}
+                placeholder="Enter text"
+                onChange={(e) => handleChange(idx, e)}
+              />
+              <Button type="button" onClick={() => handleRemove(idx)}>
+                x
+              </Button>
+            </div>
+          );
+        })}
 
         <Button
           style={{

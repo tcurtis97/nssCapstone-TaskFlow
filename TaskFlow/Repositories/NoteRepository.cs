@@ -32,7 +32,7 @@ namespace TaskFlow.Repositories
                             Id = DbUtils.GetInt(reader, "Id"),
                             UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                             JobId = DbUtils.GetInt(reader, "JobId"),
-                            Date = DbUtils.GetDateTime(reader, "Date"),
+                            CreateDate = DbUtils.GetDateTime(reader, "Date"),
                             NoteText = DbUtils.GetString(reader, "NoteText"),
 
                         });
@@ -69,7 +69,7 @@ namespace TaskFlow.Repositories
                             Id = id,
                             UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
                             JobId = DbUtils.GetInt(reader, "JobId"),
-                            Date = DbUtils.GetDateTime(reader, "Date"),
+                            CreateDate = DbUtils.GetDateTime(reader, "Date"),
                             NoteText = DbUtils.GetString(reader, "NoteText"),
                             
 
@@ -97,7 +97,7 @@ namespace TaskFlow.Repositories
                                         VALUES (@UserProfileId, @JobId, @Date, @NoteText)";
                     DbUtils.AddParameter(cmd, "@UserProfileId", note.UserProfileId);
                     DbUtils.AddParameter(cmd, "@JobId", note.JobId);
-                    DbUtils.AddParameter(cmd, "@Date", note.Date);
+                    DbUtils.AddParameter(cmd, "@Date", note.CreateDate);
                     DbUtils.AddParameter(cmd, "@NoteText", note.NoteText);
 
 
@@ -137,7 +137,7 @@ namespace TaskFlow.Repositories
 
                     DbUtils.AddParameter(cmd, "@UserProfileId", note.UserProfileId);
                     DbUtils.AddParameter(cmd, "@JobId", note.JobId);
-                    DbUtils.AddParameter(cmd, "@Date", note.Date);
+                    DbUtils.AddParameter(cmd, "@Date", note.CreateDate);
                     DbUtils.AddParameter(cmd, "@NoteText", note.NoteText);
 
                     cmd.ExecuteNonQuery();

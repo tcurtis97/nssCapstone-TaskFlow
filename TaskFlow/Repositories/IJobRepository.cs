@@ -10,5 +10,7 @@ namespace TaskFlow.Repositories
         List<Job> GetAll();
         Job GetById(int id);
         void Update(Job job);
+
+        Job GetJobByIdWithDetails(int id);
     }
 }

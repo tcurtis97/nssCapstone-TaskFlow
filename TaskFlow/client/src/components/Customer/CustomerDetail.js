@@ -8,16 +8,19 @@ import { Link } from "react-router-dom";
 import { CardHeader } from "reactstrap";
 
 const CustomerDetails = () => {
-  const [customer, setCustomer] = useState({});
+  const [customer, SetCustomer] = useState({
+    addresses: [],
+    jobs: [],
+  });
 
-  const { GetCustomerByIdWithAddressWithJob } = useContext(CustomerContext);
+  const { getCustomerByIdWithAddressWithJob } = useContext(CustomerContext);
 
   const { id } = useParams();
 
   useEffect(() => {
     console.log("useEffect", id);
-    GetCustomerByIdWithAddressWithJob(id).then((response) => {
-      setCustomer(response);
+    getCustomerByIdWithAddressWithJob(id).then((response) => {
+      SetCustomer(response);
     });
   }, []);
 
@@ -32,13 +35,19 @@ const CustomerDetails = () => {
         <strong>{customer.phoneNumber}</strong>
       </CardHeader>
 
-      {customer.addresses.map((a) => (
-        <CustomerAddress key={a.id} address={a} />
-      ))}
+      <CardHeader>
+        <strong>Addresses:</strong>
+        {customer.addresses.map((a) => (
+          <CustomerAddress key={a.id} address={a} />
+        ))}
+      </CardHeader>
 
-      {customer.jobs.map((j) => (
-        <CustomerJob key={j.id} job={j} />
-      ))}
+      <CardHeader>
+        <strong>Jobs:</strong>
+        {customer.jobs.map((j) => (
+          <CustomerJob key={j.id} job={j} />
+        ))}{" "}
+      </CardHeader>
     </div>
   );
 };

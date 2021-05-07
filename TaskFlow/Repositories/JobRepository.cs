@@ -174,7 +174,85 @@ namespace TaskFlow.Repositories
         }
 
 
+        public Job GetJobByIdWithDetails(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                          SELECT 
+                                 j.Id AS JobId, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, 
+                                 ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId,
+                                    
 
+                                    c.Id AS CustomerId, c.[Name], c.PhoneNumber,
+
+                                 
+
+                                    a.Id AS AddressId, a.CustomerId, a.Address,
+                                    
+                                    n.Id AS NoteId, n.UserProfileId, n.JobId, n.CreateDate, n.NoteText
+                            
+                            FROM Job j
+                            LEFT JOIN Address a ON j.AddressId = a.Id
+                            LEFT JOIN Customer c ON j.CustomerId = c.Id
+                             LEFT JOIN Note n ON j.Id = n.JobId
+                           WHERE j.Id = @Id";
+
+                    DbUtils.AddParameter(cmd, "@Id", id);
+
+                    var reader = cmd.ExecuteReader();
+
+                    Job job = null;
+                    if (reader.Read())
+                    {
+                        job = new Job()
+                        {
+                            Id = id,
+                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                            CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            notes = new List<Note>(),
+                            Address = new CustomerAddress()
+                            {
+                                Id = DbUtils.GetInt(reader, "AddressId"),
+                                CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                                Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            Customer = new Customer() 
+                            {
+                                Id = DbUtils.GetInt(reader, "CustomerId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                            },
+                        };
+
+                        if (DbUtils.IsNotDbNull(reader, "NoteId"))
+                        {
+                            job.notes.Add(new Note()
+                            {
+                                Id = DbUtils.GetInt(reader, "NoteId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
+                                CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                                NoteText = DbUtils.GetString(reader, "NoteText"),
+                            });
+                        }
+
+
+
+                    }
+                    reader.Close();
+
+                    return job;
+
+                }
+            }
+        }
 
 
 
