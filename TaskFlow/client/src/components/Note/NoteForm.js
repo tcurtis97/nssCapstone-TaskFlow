@@ -5,7 +5,7 @@ import { NoteContext } from "../../providers/NoteProvider";
 import { useHistory, useParams } from "react-router-dom";
 
 export const NoteForm = () => {
-  const { addNote, getNoteById, updateNote, getAllNotees } = useContext(
+  const { addNote, getNoteById, updateNote, getAllNotes } = useContext(
     NoteContext
   );
 
@@ -41,13 +41,13 @@ export const NoteForm = () => {
       if (noteId) {
         updateNote({
           id: noteId,
-          Note: note.Note,
+          NoteText: note.NoteText,
         }).then(() => history.push(`/note`));
       } else {
         addNote({
-          Note: note.Note,
+          NoteText: note.NoteText,
           JobId: jobId,
-        }).then(() => history.push(`/customer/${customerId}`));
+        }).then(() => history.push(`/job/${jobId}`));
         // for (values of fields) {
         //   addNote({
         //     Note: values.value,
@@ -57,7 +57,7 @@ export const NoteForm = () => {
   };
 
   useEffect(() => {
-    getAllNotees().then(() => {
+    getAllNotes().then(() => {
       if (noteId) {
         getNoteById(noteId).then((c) => {
           setNote(c);
@@ -86,16 +86,16 @@ export const NoteForm = () => {
       <div className="form_background">
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="Note">Note name:</Label>
+            <Label htmlFor="NoteText">Note Text:</Label>
             <Input
               type="text"
-              id="Note"
+              id="NoteText"
               onChange={handleControlledInputChange}
               required
               autoFocus
               className="form-control"
-              value={note.Note}
-              placeholder="Note"
+              value={note.NoteText}
+              placeholder="NoteText"
             />
           </div>
         </fieldset>

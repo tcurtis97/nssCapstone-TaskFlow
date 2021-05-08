@@ -2,7 +2,7 @@ import React, { useEffect, useContext, useState } from "react";
 import { CustomerContext } from "../../providers/CustomerProvider";
 import { AddressContext } from "../../providers/AddressProvider";
 import { JobContext } from "../../providers/JobProvider";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import CustomerAddress from "./CustomerAddress";
 import CustomerJob from "./CustomerJob";
 import { Link } from "react-router-dom";
@@ -19,6 +19,7 @@ const CustomerDetails = () => {
   const { GetAllJobsByCustomerId } = useContext(JobContext);
 
   const { id } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
     console.log("useEffect", id);
@@ -45,6 +46,16 @@ const CustomerDetails = () => {
 
   return (
     <div className="container">
+      <Button
+        variant
+        className="back_button"
+        onClick={() => {
+          history.goBack();
+        }}
+      >
+        Back
+      </Button>
+
       <CardHeader>
         <strong>{customer.name}</strong>
         <strong>{customer.phoneNumber}</strong>

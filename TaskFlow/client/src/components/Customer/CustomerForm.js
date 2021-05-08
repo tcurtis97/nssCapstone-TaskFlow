@@ -50,8 +50,8 @@ export const CustomerForm = () => {
         }).then(() => history.push(`/customer`));
       } else {
         addCustomer({
-          Name: customer.Name,
-          PhoneNumber: customer.PhoneNumber,
+          Name: customer.name,
+          PhoneNumber: customer.phoneNumber,
         }).then(() => history.push(`/customer`));
         // for (values of fields) {
         //   addAddress({
@@ -121,7 +121,7 @@ export const CustomerForm = () => {
               required
               autoFocus
               className="form-control"
-              value={customer.Name}
+              value={customer.name}
               placeholder="Customer name"
             />
           </div>
@@ -137,7 +137,7 @@ export const CustomerForm = () => {
               required
               autoFocus
               className="form-control"
-              value={customer.PhoneNumber}
+              value={customer.phoneNumber}
               placeholder="Phone Number"
             />
           </div>

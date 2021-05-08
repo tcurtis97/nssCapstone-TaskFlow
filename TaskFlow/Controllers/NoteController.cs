@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TaskFlow.Models;
 using TaskFlow.Repositories;
@@ -16,9 +17,11 @@ namespace TaskFlow.Controllers
     public class NoteController : ControllerBase
     {
         private readonly INoteRepository _noteRepository;
-        public NoteController(INoteRepository noteRepository)
+        private readonly IUserProfileRepository _userProfileRepository;
+        public NoteController(INoteRepository noteRepository, IUserProfileRepository userProfileRepository)
         {
             _noteRepository = noteRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         [HttpGet]
@@ -41,6 +44,11 @@ namespace TaskFlow.Controllers
             [HttpPost]
         public IActionResult Post(Note note)
         {
+            var currentUserProfile = GetCurrentUserProfile();
+
+            note.UserProfileId = currentUserProfile.Id;
+            note.CreateDate = DateTime.Now;
+
             _noteRepository.Add(note);
             return CreatedAtAction(nameof(Get), new { id = note.Id }, note);
         }
@@ -76,7 +84,12 @@ namespace TaskFlow.Controllers
         }
 
 
-
+        // Retrieves the current user object by using the provided firebaseId
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
+        }
 
 
     }

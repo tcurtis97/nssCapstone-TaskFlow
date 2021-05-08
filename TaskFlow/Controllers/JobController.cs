@@ -41,6 +41,8 @@ namespace TaskFlow.Controllers
         [HttpPost]
         public IActionResult Post(Job job)
         {
+            job.CreateDate = DateTime.Now;
+
             _jobRepository.Add(job);
             return CreatedAtAction(nameof(Get), new { id = job.Id }, job);
         }

@@ -27,7 +27,16 @@ namespace TaskFlow.Controllers
             return Ok(_addressRepository.GetAll());
         }
 
-        
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            var address = _addressRepository.GetById(id);
+            if (address == null)
+            {
+                return NotFound();
+            }
+            return Ok(address);
+        }
 
         [HttpPost]
         public IActionResult Post(CustomerAddress address)
