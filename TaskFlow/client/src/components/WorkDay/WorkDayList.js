@@ -1,63 +1,27 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { WorkDayContext } from "../../providers/WorkDayProvider";
 import { JobContext } from "../../providers/JobProvider";
-import Job from "./Job";
-import { Link } from "react-router-dom";
-import { Button } from "reactstrap";
+import WorkDay from "./WorkDay";
 
-const JobList = () => {
-  const {
-    jobs,
-    getAllJobs,
-    setViewingUncomplete,
-    viewingUncomplete,
-    getUncompleteJobs,
-  } = useContext(JobContext);
-  console.log(jobs, "jobs");
+const WorkDayList = () => {
+  const { GetJobsByWorkDay } = useContext(JobContext);
+
+  const [jobs, setJobs] = useState([]);
+  console.log(jobs, "stirng");
 
   useEffect(() => {
-    getAllJobs();
+    GetJobsByWorkDay().then((response) => {
+      setJobs(response);
+    });
   }, []);
-
-  useEffect(() => {
-    if (viewingUncomplete) {
-      getUncompleteJobs();
-    } else {
-      getAllJobs();
-    }
-  }, [viewingUncomplete]);
 
   return (
     <section>
-      <div>
-        {viewingUncomplete ? <h1>Uncomplete Jobs</h1> : <h1>All Jobs</h1>}
-        {viewingUncomplete ? (
-          <Button
-            color="success"
-            onClick={() => {
-              setViewingUncomplete(false);
-            }}
-          >
-            View All Jobs
-          </Button>
-        ) : (
-          <Button
-            onClick={() => {
-              setViewingUncomplete(true);
-            }}
-          >
-            View Uncomplete Jobs
-          </Button>
-        )}
-      </div>
-
-      <Link to="/job/add" className="nav-link">
-        New Job
-      </Link>
       {jobs.map((j) => (
-        <Job key={j.id} job={j} />
+        <WorkDay key={j.id} workDay={j} />
       ))}
     </section>
   );
 };
 
-export default JobList;
+export default WorkDayList;

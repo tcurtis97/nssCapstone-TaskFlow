@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import JobNote from "./JobNote";
 import JobWorkRecord from "./JobWorkRecord";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { CardHeader, CardText, Button } from "reactstrap";
 
 const JobDetails = () => {
@@ -14,7 +14,7 @@ const JobDetails = () => {
     customer: {},
     address: {},
   });
-
+  const history = useHistory();
   const [notes, SetNotes] = useState([]);
   const [workRecords, SetWorkRecords] = useState([]);
   console.log(notes);
@@ -53,6 +53,15 @@ const JobDetails = () => {
 
   return (
     <div className="container">
+      <Button
+        variant
+        className="back_button"
+        onClick={() => {
+          history.goBack();
+        }}
+      >
+        Back
+      </Button>
       <CardHeader>
         <strong>{job.customer.name}</strong>
       </CardHeader>

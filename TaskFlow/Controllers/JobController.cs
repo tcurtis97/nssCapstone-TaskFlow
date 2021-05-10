@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TaskFlow.Models;
 using TaskFlow.Repositories;
@@ -16,9 +17,11 @@ namespace TaskFlow.Controllers
     public class JobController : ControllerBase
     {
         private readonly IJobRepository _jobRepository;
-        public JobController(IJobRepository jobRepository)
+        private readonly IUserProfileRepository _userProfileRepository;
+        public JobController(IJobRepository jobRepository, IUserProfileRepository userProfileRepository)
         {
             _jobRepository = jobRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         [HttpGet]
@@ -89,10 +92,12 @@ namespace TaskFlow.Controllers
         }
 
 
-        [HttpGet("GetJobsByWorkDay{id}")]
-        public IActionResult GetJobsByWorkDay(int id)
+        [HttpGet("GetJobsByWorkDayUser")]
+        public IActionResult GetJobsByWorkDayUser()
         {
-            var job = _jobRepository.GetJobsByWorkDay(id);
+            var currentUserProfile = GetCurrentUserProfile();
+            int userId = currentUserProfile.Id;
+            var job = _jobRepository.GetJobsByWorkDayUser(userId);
             if (job == null)
             {
                 return NotFound();
@@ -119,6 +124,14 @@ namespace TaskFlow.Controllers
         {
             return Ok(_jobRepository.GetAllUncompleteJobs());
         }
+
+
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
+        }
+
 
 
     }

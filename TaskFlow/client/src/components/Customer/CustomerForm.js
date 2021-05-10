@@ -12,8 +12,6 @@ export const CustomerForm = () => {
     getAllCustomers,
   } = useContext(CustomerContext);
 
-  const { addAddress } = useContext(CustomerContext);
-
   const [customer, setCustomer] = useState({
     Name: "",
     PhoneNumber: "",
@@ -37,7 +35,7 @@ export const CustomerForm = () => {
   };
 
   const handleClickSaveCustomer = () => {
-    if (customer.Name === "" || customer.PhoneNumber === "") {
+    if (customer.name === "" || customer.phoneNumber === "") {
       window.alert("Please enter a name");
     } else {
       setIsLoading(true);
@@ -45,18 +43,14 @@ export const CustomerForm = () => {
       if (customerId) {
         updateCustomer({
           id: customerId,
-          Name: customer.Name,
-          PhoneNumber: customer.PhoneNumber,
+          name: customer.name,
+          phoneNumber: customer.phoneNumber,
         }).then(() => history.push(`/customer`));
       } else {
         addCustomer({
-          Name: customer.name,
-          PhoneNumber: customer.phoneNumber,
+          name: customer.name,
+          phoneNumber: customer.phoneNumber,
         }).then(() => history.push(`/customer`));
-        // for (values of fields) {
-        //   addAddress({
-        //     Address: values.value,
-        //   })
       }
     }
   };
@@ -73,26 +67,6 @@ export const CustomerForm = () => {
       }
     });
   }, []);
-
-  // const [fields, setFields] = useState([{ value: null }]);
-
-  // function handleAdd() {
-  //   const values = [...fields];
-  //   values.push({ value: null });
-  //   setFields(values);
-  // }
-
-  // function handleRemove(i) {
-  //   const values = [...fields];
-  //   values.splice(i, 1);
-  //   setFields(values);
-  // }
-
-  // function handleChange(i, event) {
-  //   const values = [...fields];
-  //   values[i].value = event.target.value;
-  //   setFields(values);
-  // }
 
   return (
     <Form className="customerForm">
@@ -113,10 +87,10 @@ export const CustomerForm = () => {
       <div className="form_background">
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="Name">Customer name:</Label>
+            <Label htmlFor="name">Customer name:</Label>
             <Input
               type="text"
-              id="Name"
+              id="name"
               onChange={handleControlledInputChange}
               required
               autoFocus
@@ -129,10 +103,11 @@ export const CustomerForm = () => {
 
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="PhoneNumber">Phone Number:</Label>
+            <Label htmlFor="phoneNumber">Phone Number:</Label>
             <Input
-              type="text"
-              id="PhoneNumber"
+              type="tel"
+              id="phoneNumber"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               onChange={handleControlledInputChange}
               required
               autoFocus
@@ -142,25 +117,6 @@ export const CustomerForm = () => {
             />
           </div>
         </fieldset>
-
-        {/* <Button type="button" onClick={() => handleAdd()}>
-          +
-        </Button>
-        {fields.map((field, idx) => {
-          return (
-            <div key={`${field}-${idx}`}>
-              <Input
-                type="text"
-                value={field.value}
-                placeholder="Enter text"
-                onChange={(e) => handleChange(idx, e)}
-              />
-              <Button type="button" onClick={() => handleRemove(idx)}>
-                x
-              </Button>
-            </div>
-          );
-        })} */}
 
         <Button
           style={{

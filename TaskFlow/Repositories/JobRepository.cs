@@ -25,13 +25,19 @@ namespace TaskFlow.Repositories
                             c.Id AS CustomerId, c.[Name], c.PhoneNumber,
 
 
-                                 a.Id AS AddressId, a.CustomerId, a.Address
+                                 a.Id AS AddressId, a.CustomerId, a.Address,
 
+                         
+                        ISNULL( wd.UserProfileId, 0) as UserProfileId, ISNULL(wd.Id, 0) as WorkDayId, ISNULL(wd.JobId, 0) AS JobId,
+
+                         ISNULL( u.Id, 0) as UserProfileId, ISNULL(u.DisplayName, '') as DisplayName
 
 
                           FROM  Job j
+                    LEFT JOIN WorkDay wd on j.Id = wd.JobId
                     LEFT JOIN Address a ON j.AddressId = a.Id
                      LEFT JOIN Customer c ON j.CustomerId = c.Id
+                    LEFT JOIN UserProfile u ON wd.UserProfileId = u.Id
                     ";
 
                     var reader = cmd.ExecuteReader();
@@ -57,6 +63,17 @@ namespace TaskFlow.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
                                 Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            WorkDay = new WorkDay()
+                            {
+                                Id = DbUtils.GetInt(reader, "WorkDayId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
+                            },
+                            userProfile = new UserProfile()
+                            {
+                                Id = DbUtils.GetInt(reader, "UserProfileId"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
                             },
 
                         });
@@ -371,7 +388,7 @@ namespace TaskFlow.Repositories
             }
         }
 
-        public List<Job> GetJobsByWorkDay(int id)
+        public List<Job> GetJobsByWorkDayUser(int id)
         {
             using (var conn = Connection)
             {
@@ -388,10 +405,10 @@ namespace TaskFlow.Repositories
                                  a.Id AS AddressId, a.CustomerId, a.Address
       
                         FROM    Job j
-                                LEFT JOIN WorkDay ws on j.Id = wd.JobId
+                                LEFT JOIN WorkDay wd on j.Id = wd.JobId
                                 LEFT JOIN Address a ON j.AddressId = a.Id
                                 LEFT JOIN Customer c ON j.CustomerId = c.Id
-                        WHERE wd.JobId = @id";
+                        WHERE wd.UserProfileId = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -420,6 +437,12 @@ namespace TaskFlow.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
                                 Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            Customer = new Customer()
+                            {
+                                Id = DbUtils.GetInt(reader, "CustomerId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
                             },
 
                         });

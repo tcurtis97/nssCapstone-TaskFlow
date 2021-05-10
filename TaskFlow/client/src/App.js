@@ -10,6 +10,7 @@ import { JobProvider } from "./providers/JobProvider";
 import { AddressProvider } from "./providers/AddressProvider";
 import { NoteProvider } from "./providers/NoteProvider";
 import { WorkRecordProvider } from "./providers/WorkRecordProvider";
+import { WorkDayProvider } from "./providers/WorkDayProvider";
 
 function App() {
   return (
@@ -20,8 +21,10 @@ function App() {
             <WorkRecordProvider>
               <CustomerProvider>
                 <AddressProvider>
-                  <Header />
-                  <ApplicationViews />
+                  <WorkDayProvider>
+                    <Header />
+                    <ApplicationViews />
+                  </WorkDayProvider>
                 </AddressProvider>
               </CustomerProvider>
             </WorkRecordProvider>

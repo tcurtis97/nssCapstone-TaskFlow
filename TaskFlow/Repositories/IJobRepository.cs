@@ -20,6 +20,6 @@ namespace TaskFlow.Repositories
 
         List<Job> GetAllUncompleteJobs();
 
-        List<Job> GetJobsByWorkDay(int id);
+        List<Job> GetJobsByWorkDayUser(int id);
     }
 }

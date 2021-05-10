@@ -115,9 +115,9 @@ export const JobProvider = (props) => {
     );
   };
 
-  const GetJobsByWorkDay = (id) => {
+  const GetJobsByWorkDay = () => {
     return getToken().then((token) =>
-      fetch(`/api/job/GetJobsByWorkDay${id}`, {
+      fetch(`/api/job/GetJobsByWorkDayUser`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

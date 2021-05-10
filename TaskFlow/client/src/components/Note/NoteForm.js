@@ -33,7 +33,7 @@ export const NoteForm = () => {
   };
 
   const handleClickSaveNote = () => {
-    if (note.Note === "") {
+    if (note.noteText === "") {
       window.alert("Please enter an Note");
     } else {
       setIsLoading(true);
@@ -41,17 +41,13 @@ export const NoteForm = () => {
       if (noteId) {
         updateNote({
           id: noteId,
-          NoteText: note.NoteText,
+          noteText: note.noteText,
         }).then(() => history.push(`/note`));
       } else {
         addNote({
-          NoteText: note.NoteText,
+          noteText: note.noteText,
           JobId: jobId,
         }).then(() => history.push(`/job/${jobId}`));
-        // for (values of fields) {
-        //   addNote({
-        //     Note: values.value,
-        //   })
       }
     }
   };
@@ -86,15 +82,15 @@ export const NoteForm = () => {
       <div className="form_background">
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="NoteText">Note Text:</Label>
+            <Label htmlFor="noteText">Note Text:</Label>
             <Input
               type="text"
-              id="NoteText"
+              id="noteText"
               onChange={handleControlledInputChange}
               required
               autoFocus
               className="form-control"
-              value={note.NoteText}
+              value={note.noteText}
               placeholder="NoteText"
             />
           </div>

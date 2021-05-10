@@ -44,13 +44,13 @@ export const WorkRecordForm = () => {
       if (workRecordId) {
         updateWorkRecord({
           id: workRecordId,
-          NoteText: workRecord.NoteText,
-          TimeOnJob: workRecord.TimeOnJob,
+          noteText: workRecord.noteText,
+          timeOnJob: workRecord.timeOnJob,
         }).then(() => history.push(`/workRecord`));
       } else {
         addWorkRecord({
-          NoteText: workRecord.NoteText,
-          TimeOnJob: workRecord.TimeOnJob,
+          noteText: workRecord.noteText,
+          timeOnJob: workRecord.timeOnJob,
           JobId: jobId,
         }).then(() => history.push(`/job/${jobId}`));
         // for (values of fields) {
@@ -93,15 +93,15 @@ export const WorkRecordForm = () => {
       <div className="form_background">
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="NoteText">WorkRecord Text:</Label>
+            <Label htmlFor="noteText">WorkRecord Text:</Label>
             <Input
               type="text"
-              id="NoteText"
+              id="noteText"
               onChange={handleControlledInputChange}
               required
               autoFocus
               className="form-control"
-              value={workRecord.NoteText}
+              value={workRecord.noteText}
               placeholder="NoteText"
             />
           </div>
@@ -109,15 +109,15 @@ export const WorkRecordForm = () => {
 
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="TimeOnJob">WorkRecord Text:</Label>
+            <Label htmlFor="timeOnJob">Time on job:</Label>
             <Input
               type="number"
-              id="TimeOnJob"
+              id="timeOnJob"
               onChange={handleControlledInputChange}
               required
               autoFocus
               className="form-control"
-              value={workRecord.TimeOnJob}
+              value={workRecord.timeOnJob}
               placeholder="TimeOnJob"
             />
           </div>

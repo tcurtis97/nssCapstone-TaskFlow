@@ -12,9 +12,7 @@ export const AddressForm = () => {
     getAllAddresses,
   } = useContext(AddressContext);
 
-  const [address, setAddress] = useState({
-    Address: "",
-  });
+  const [address, setAddress] = useState({});
 
   const { customerId } = useParams();
 
@@ -44,11 +42,11 @@ export const AddressForm = () => {
       if (addressId) {
         updateAddress({
           id: addressId,
-          Address: address.Address,
+          address: address.address,
         }).then(() => history.push(`/address`));
       } else {
         addAddress({
-          Address: address.Address,
+          address: address.address,
           CustomerId: customerId,
         }).then(() => history.push(`/customer/${customerId}`));
         // for (values of fields) {
@@ -91,15 +89,15 @@ export const AddressForm = () => {
       <div className="form_background">
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="Address">Address name:</Label>
+            <Label htmlFor="address">Address name:</Label>
             <Input
               type="text"
-              id="Address"
+              id="address"
               onChange={handleControlledInputChange}
               required
               autoFocus
               className="form-control"
-              value={address.Address}
+              value={address.address}
               placeholder="Address"
             />
           </div>

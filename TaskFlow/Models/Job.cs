@@ -30,5 +30,7 @@ namespace TaskFlow.Models
         public WorkDay WorkDay { get; set; }
 
         public List<Note> notes;
+
+        public UserProfile userProfile { get; set; }
     }
 }

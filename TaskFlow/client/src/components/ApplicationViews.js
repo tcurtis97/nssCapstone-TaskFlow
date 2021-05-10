@@ -18,6 +18,7 @@ import NoteEdit from "./Note/NoteEdit";
 import { WorkRecordForm } from "./WorkRecord/WorkRecordForm";
 import UserProfileDetail from "./UserProfile/UserProfileDetail";
 import { JobEdit } from "./Job/JobEdit";
+import WorkDayList from "./WorkDay/WorkDayList";
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);
@@ -63,7 +64,7 @@ export default function ApplicationViews() {
           {isLoggedIn ? <AddressForm /> : <Redirect to="/login" />}
         </Route>
         <Route path="/address/edit/:addressId(\d+)" exact>
-          {isLoggedIn ? <AddressEdit /> : <Redirect to="/login" />}
+          {isLoggedIn ? <AddressForm /> : <Redirect to="/login" />}
         </Route>
 
         {/* Note ROUTES */}
@@ -89,6 +90,11 @@ export default function ApplicationViews() {
         {/* <Route path="/workRecord/edit/:workRecordId(\d+)" exact>
           {isLoggedIn ? <WorkRecordForm /> : <Redirect to="/login" />}
         </Route> */}
+
+        {/* WorkDay ROUTES */}
+        <Route path="/workday" exact>
+          {isLoggedIn ? <WorkDayList /> : <Redirect to="/login" />}
+        </Route>
 
         <Route path="/login">
           <Login />
