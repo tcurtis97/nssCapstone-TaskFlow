@@ -42,7 +42,7 @@ namespace TaskFlow.Repositories
                         jobs.Add(new Job()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -77,8 +77,9 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                         SELECT  Id, Description, ImageUrl, CompletionDate, CreateDate, CustomerId
-                          FROM  Job
+                         SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate,
+                           j.CreateDate, j.CustomerId, j.AddressId
+                          FROM  Job j
                     WHERE Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@Id", id);
@@ -91,7 +92,7 @@ namespace TaskFlow.Repositories
                         job = new Job()
                         {
                             Id = id,
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -116,14 +117,16 @@ namespace TaskFlow.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Job (Description, ImageUrl, CompletionDate, CreateDate, CustomerId)
+                    cmd.CommandText = @"INSERT INTO Job (Description, ImageUrl, CreateDate, CustomerId, AddressId)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@Description, @ImageUrl, @CompletionDate, @CreateDate, @CustomerId)";
-                    DbUtils.AddParameter(cmd, "@Description", job.Descritpion);
+                                        VALUES (@Description, @ImageUrl, @CreateDate, @CustomerId, @AddressId)";
+                    DbUtils.AddParameter(cmd, "@Description", job.Description);
                     DbUtils.AddParameter(cmd, "@ImageUrl", job.ImageUrl);
-                    DbUtils.AddParameter(cmd, "@CompletionDate", job.CompletionDate);
+        
                     DbUtils.AddParameter(cmd, "@CreateDate", job.CreateDate);
                     DbUtils.AddParameter(cmd, "@CustomerId", job.CustomerId);
+                    DbUtils.AddParameter(cmd, "@AddressId", job.AddressId);
+
 
 
                     job.Id = (int)cmd.ExecuteScalar();
@@ -161,11 +164,12 @@ namespace TaskFlow.Repositories
                                 CustomerId = @CustomerId
                          WHERE Id = @Id";
 
-                    DbUtils.AddParameter(cmd, "@Description", job.Descritpion);
+                    DbUtils.AddParameter(cmd, "@Description", job.Description);
                     DbUtils.AddParameter(cmd, "@ImageUrl", job.ImageUrl);
                     DbUtils.AddParameter(cmd, "@CompletionDate", job.CompletionDate);
                     DbUtils.AddParameter(cmd, "@CreateDate", job.CreateDate);
                     DbUtils.AddParameter(cmd, "@CustomerId", job.CustomerId);
+                    DbUtils.AddParameter(cmd, "@AddressId", job.AddressId);
                     DbUtils.AddParameter(cmd, "@Id", job.Id);
 
                     cmd.ExecuteNonQuery();
@@ -212,7 +216,7 @@ namespace TaskFlow.Repositories
                         job = new Job()
                         {
                             Id = id,
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -269,7 +273,7 @@ namespace TaskFlow.Repositories
                         jobs.Add(new Job()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -339,7 +343,7 @@ namespace TaskFlow.Repositories
                         jobs.Add(new Job()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -376,10 +380,18 @@ namespace TaskFlow.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate,
-                           j.CreateDate, j.CustomerId, j.AddressId, wd.UserProfileId, wd.Id AS WorkDayId, wd.JobId
+                           j.CreateDate, j.CustomerId, j.AddressId, wd.UserProfileId, wd.Id AS WorkDayId, wd.JobId,
+
+                                       c.Id AS CustomerId, c.[Name], c.PhoneNumber,
+
+
+                                 a.Id AS AddressId, a.CustomerId, a.Address
+      
                         FROM    Job j
                                 LEFT JOIN WorkDay ws on j.Id = wd.JobId
-                        WHERE pt.PostId = @id";
+                                LEFT JOIN Address a ON j.AddressId = a.Id
+                                LEFT JOIN Customer c ON j.CustomerId = c.Id
+                        WHERE wd.JobId = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -392,17 +404,17 @@ namespace TaskFlow.Repositories
                         jobs.Add(new Job()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
                             CustomerId = DbUtils.GetInt(reader, "CustomerId"),
                             AddressId = DbUtils.GetInt(reader, "AddressId"),
-                            Customer = new Customer()
+                            WorkDay = new WorkDay()
                             {
-                                Id = DbUtils.GetInt(reader, "CustomerId"),
-                                Name = DbUtils.GetString(reader, "Name"),
-                                PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                                Id = DbUtils.GetInt(reader, "WorkDayId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
                             },
                             Address = new CustomerAddress()
                             {

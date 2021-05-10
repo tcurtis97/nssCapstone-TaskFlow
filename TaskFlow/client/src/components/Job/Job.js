@@ -22,7 +22,7 @@ const Job = ({ job }) => {
           <strong>{job.address.address}</strong>
         </p>
         <p>
-          <strong>Description : {job.descritpion}</strong>
+          <strong>Description : {job.description}</strong>
         </p>
         <p>
           <strong>{job.CompletionDate}</strong>
@@ -35,6 +35,9 @@ const Job = ({ job }) => {
         </Link>
         <Button variant="secondary" onClick={jobDelete} className="btn-primary">
           Delete
+        </Button>
+        <Button variant="secondary" onClick={jobDelete} className="btn-primary">
+          Add to workday
         </Button>
       </CardBody>
     </Card>

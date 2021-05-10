@@ -19,5 +19,7 @@ namespace TaskFlow.Repositories
         void ComepleteJob(int JobId, DateTime complete);
 
         List<Job> GetAllUncompleteJobs();
+
+        List<Job> GetJobsByWorkDay(int id);
     }
 }

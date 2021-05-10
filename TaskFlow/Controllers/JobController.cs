@@ -88,6 +88,20 @@ namespace TaskFlow.Controllers
             return Ok(job);
         }
 
+
+        [HttpGet("GetJobsByWorkDay{id}")]
+        public IActionResult GetJobsByWorkDay(int id)
+        {
+            var job = _jobRepository.GetJobsByWorkDay(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            return Ok(job);
+        }
+
+
+
         //[HttpDelete("{id}")]
         //public IActionResult ComepleteJob(int id, DateTime complete)
         //{

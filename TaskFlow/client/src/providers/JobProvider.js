@@ -115,6 +115,17 @@ export const JobProvider = (props) => {
     );
   };
 
+  const GetJobsByWorkDay = (id) => {
+    return getToken().then((token) =>
+      fetch(`/api/job/GetJobsByWorkDay${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json())
+    );
+  };
+
   return (
     <JobContext.Provider
       value={{
@@ -130,6 +141,7 @@ export const JobProvider = (props) => {
         GetJobByIdWithDetails,
         GetAllJobsByCustomerId,
         CompleteJob,
+        GetJobsByWorkDay,
       }}
     >
       {props.children}

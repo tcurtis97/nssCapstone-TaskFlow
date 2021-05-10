@@ -228,7 +228,7 @@ namespace TaskFlow.Repositories
                                 customer.Jobs.Add(new Job()
                                 {
                                     Id = DbUtils.GetInt(reader, "JobId"),
-                                    Descritpion = DbUtils.GetString(reader, "Description"),
+                                    Description = DbUtils.GetString(reader, "Description"),
                                     ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                                     CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                                     CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),

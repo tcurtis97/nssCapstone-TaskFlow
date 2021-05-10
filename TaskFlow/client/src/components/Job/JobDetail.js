@@ -64,7 +64,7 @@ const JobDetails = () => {
       </CardHeader>
 
       <CardText>
-        <strong>{job.descritpion}</strong>
+        <strong>{job.description}</strong>
       </CardText>
 
       <CardHeader>
