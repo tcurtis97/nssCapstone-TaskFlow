@@ -15,6 +15,8 @@ import { AddressForm } from "./Address/AddressForm";
 import AddressEdit from "./Address/AddressEdit";
 import { NoteForm } from "./Note/NoteForm";
 import NoteEdit from "./Note/NoteEdit";
+import { WorkRecordForm } from "./WorkRecord/WorkRecordForm";
+import UserProfileDetail from "./UserProfile/UserProfileDetail";
 
 export default function ApplicationViews() {
   const { isLoggedIn } = useContext(UserProfileContext);
@@ -60,13 +62,29 @@ export default function ApplicationViews() {
           {isLoggedIn ? <AddressEdit /> : <Redirect to="/login" />}
         </Route>
 
-        {/* Address ROUTES */}
+        {/* Note ROUTES */}
         <Route path="/note/add/:jobId(\d+)" exact>
           {isLoggedIn ? <NoteForm /> : <Redirect to="/login" />}
         </Route>
         <Route path="/note/edit/:noteId(\d+)" exact>
           {isLoggedIn ? <NoteForm /> : <Redirect to="/login" />}
         </Route>
+
+        {/* WorkRecord ROUTES */}
+        <Route path="/workRecord/add/:jobId(\d+)" exact>
+          {isLoggedIn ? <WorkRecordForm /> : <Redirect to="/login" />}
+        </Route>
+        <Route path="/workRecord/edit/:workRecordId(\d+)" exact>
+          {isLoggedIn ? <WorkRecordForm /> : <Redirect to="/login" />}
+        </Route>
+
+        {/* UserProfile ROUTES */}
+        <Route path="/userProfile" exact>
+          {isLoggedIn ? <UserProfileDetail /> : <Redirect to="/login" />}
+        </Route>
+        {/* <Route path="/workRecord/edit/:workRecordId(\d+)" exact>
+          {isLoggedIn ? <WorkRecordForm /> : <Redirect to="/login" />}
+        </Route> */}
 
         <Route path="/login">
           <Login />

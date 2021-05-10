@@ -12,6 +12,8 @@ namespace TaskFlow.Models
 
         public int CustomerId { get; set; }
 
+        public int AddressId { get; set; }
+
         public string Descritpion { get; set; }
 
         public string ImageUrl { get; set; }

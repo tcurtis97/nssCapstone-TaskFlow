@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,87 @@ namespace TaskFlow.Repositories
             }
         }
 
+
+        public List<UserProfile> GetAllUsers()
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT u.id, u.FirstName, u.LastName, u.DisplayName, u.Email,
+                              u.CreateDateTime
+                       FROM UserProfile u
+                              ORDER BY u.DisplayName ASC
+                    ";
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    List<UserProfile> profiles = new List<UserProfile>();
+
+                    while (reader.Read())
+                    {
+                        UserProfile profile = new UserProfile
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                        };
+
+                        profiles.Add(profile);
+                    }
+
+                    reader.Close();
+                    return profiles;
+                }
+            }
+        }
+
+
+        public UserProfile GetUserProfileById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT u.id,  u.Email,
+                            u.FirstName, u.LastName, u.DisplayName,
+                              u.CreateDateTime
+        
+                         FROM UserProfile u
+                        WHERE u.Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    UserProfile userProfile = null;
+                    var reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        userProfile = new UserProfile()
+                        {
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Email = DbUtils.GetString(reader, "Email"),
+                            DisplayName = reader.GetString(reader.GetOrdinal("DisplayName")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+
+                        };
+                    }
+
+                    reader.Close();
+
+                    return userProfile;
+                }
+            }
+        }
+
+
         /*
         public UserProfile GetByFirebaseUserId(string firebaseUserId)
         {
@@ -89,14 +171,14 @@ namespace TaskFlow.Repositories
             _context.SaveChanges();
         }
         */
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
     }
 }

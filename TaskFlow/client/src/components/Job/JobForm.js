@@ -2,15 +2,22 @@ import React, { useContext, useEffect, useState } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { JobContext } from "../../providers/JobProvider";
 import { CustomerContext } from "../../providers/CustomerProvider";
+import { AddressContext } from "../../providers/AddressProvider";
 import { useHistory, useParams } from "react-router-dom";
 
 export const JobForm = () => {
   const { addJob, getJobById, updateJob, getAllJobs } = useContext(JobContext);
-  const { customersWithAddress, getCustomersWithAddress } = useContext(
-    CustomerContext
-  );
+  const { customers, getAllCustomers } = useContext(CustomerContext);
+  const { GetAllAddressesByCustomerId } = useContext(AddressContext);
 
-  const [job, setJob] = useState({});
+  const [Addresses, SetAddresses] = useState([]);
+  console.log(Addresses, "string");
+
+  const [job, setJob] = useState({
+    description: "",
+    customerId: 0,
+    addressId: 0,
+  });
 
   const history = useHistory();
 
@@ -31,15 +38,28 @@ export const JobForm = () => {
       window.alert("Please enter a Descritpion");
     } else {
       addJob({
-        Description: job.description,
-        Customer: job.customer,
+        description: job.description,
+        customerId: job.customerId,
+        addressId: job.addressId,
       }).then(() => history.push(`/job`));
     }
   };
 
   useEffect(() => {
-    getCustomersWithAddress();
+    getAllCustomers();
   }, []);
+
+  // useEffect(() => {
+  //   GetAllAddressesByCustomerId(job.customerId).then((response) => {
+  //     SetAddresses(response);
+  //   });
+  // }, []);
+
+  const getAddresses = () => {
+    GetAllAddressesByCustomerId(job.customerId).then((response) => {
+      SetAddresses(response);
+    });
+  };
 
   return (
     <Form className="customerForm">
@@ -58,10 +78,10 @@ export const JobForm = () => {
       <div className="form_background">
         <fieldset>
           <div className="form-group">
-            <Label htmlFor="Description">Job Description:</Label>
+            <Label htmlFor="description">Job Description:</Label>
             <Input
               type="text"
-              id="Description"
+              id="description"
               onChange={handleControlledInputChange}
               required
               autoFocus
@@ -72,7 +92,7 @@ export const JobForm = () => {
           </div>
         </fieldset>
 
-        <fieldset>
+        {/* <fieldset>
           <div className="form-group">
             <Label htmlFor="ImageUrl">ImageUrl:</Label>
             <Input
@@ -86,43 +106,37 @@ export const JobForm = () => {
               placeholder="ImageUrl"
             />
           </div>
-        </fieldset>
-
-        {/* <FormGroup>
-          <Label htmlFor="Customers">Customers:</Label>
-          <Input
-            type="text"
-            id="Customer"
-            onChange={handleControlledInputChange}
-            required
-            autoFocus
-            className="form-control"
-            value={job.customer}
-            placeholder="Find a Customer"
-            list="customerData"
-          />
-          <datalist id="customerData">
-            {customersWithAddress.map((c) => (
-              <option key={c.Id} value={c}>
-                {c.name} - {c.address.address}
-              </option>
-            ))}
-          </datalist>
-          ))
-        </FormGroup> */}
+        </fieldset> */}
 
         <FormGroup>
-          <div id="Dropdown" class="dropdown-content">
-            {/* <input type="text" id="userInput" onkeyup="Func()" /> */}
-            <select>
-              {customersWithAddress.map((c) => (
-                <option key={c.Id} value={c}>
-                  {c.name} - {c.address.address}
+          <select
+            id="customerId"
+            onSelect={getAddresses}
+            onChange={handleControlledInputChange}
+          >
+            <option value="0">Select a customer </option>
+            {customers.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </FormGroup>
+
+        {job.customerId !== 0 ? (
+          <div className="Address_card">
+            <select id="addressId" onChange={handleControlledInputChange}>
+              <option value="0">Select an address </option>
+              {Addresses.map((a) => (
+                <option key={a.id} value={a.id}>
+                  {a.address}
                 </option>
               ))}
             </select>
           </div>
-        </FormGroup>
+        ) : (
+          <div> Please Choose a customer</div>
+        )}
 
         <Button
           style={{

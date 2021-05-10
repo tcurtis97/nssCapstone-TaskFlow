@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TaskFlow.Models;
 
 namespace TaskFlow.Repositories
@@ -14,5 +15,9 @@ namespace TaskFlow.Repositories
         Job GetJobByIdWithDetails(int id);
 
         List<Job> GetAllJobsByCustomerId(int id);
+
+        void ComepleteJob(int JobId, DateTime complete);
+
+        List<Job> GetAllUncompleteJobs();
     }
 }

@@ -56,6 +56,17 @@ export const JobProvider = (props) => {
       }).then(getAllJobs)
     );
 
+  const CompleteJob = (jobId) =>
+    getToken().then((token) =>
+      fetch(`/api/job/${jobId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+    );
+
   const updateJob = (job) => {
     return getToken().then((token) =>
       fetch(`/api/job/${job.id}`, {
@@ -71,14 +82,14 @@ export const JobProvider = (props) => {
 
   const getUncompleteJobs = () => {
     return getToken().then((token) =>
-      fetch(`/api/job/UncomepleteJobs`, {
+      fetch(`/api/job/GetAllUncompleteJobs`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
         .then((res) => res.json())
-        .then(jobs)
+        .then(setjobs)
     );
   };
 
@@ -118,6 +129,7 @@ export const JobProvider = (props) => {
         getUncompleteJobs,
         GetJobByIdWithDetails,
         GetAllJobsByCustomerId,
+        CompleteJob,
       }}
     >
       {props.children}

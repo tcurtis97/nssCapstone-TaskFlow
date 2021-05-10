@@ -88,7 +88,23 @@ namespace TaskFlow.Controllers
             return Ok(job);
         }
 
+        //[HttpDelete("{id}")]
+        //public IActionResult ComepleteJob(int id, DateTime complete)
+        //{
+        //    DateTime complete = DateTime.Now;
 
+        //    {
+        //        _jobRepository.ComepleteJob(id);
+        //        return NoContent();
+        //    }
+
+        //}
+
+        [HttpGet("GetAllUncompleteJobs")]
+        public IActionResult GetAllUncompleteJobs()
+        {
+            return Ok(_jobRepository.GetAllUncompleteJobs());
+        }
 
 
     }

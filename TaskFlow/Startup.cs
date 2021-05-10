@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using TaskFlow.Repositories;
 
 namespace TaskFlow
@@ -35,6 +36,8 @@ namespace TaskFlow
             services.AddTransient<IJobRepository,  JobRepository>();
             services.AddTransient<INoteRepository, NoteRepository>();
             services.AddTransient<IAddressRepository, AddressRepository>();
+            services.AddTransient<IWorkRecordRepository, WorkRecordRepository>();
+            services.AddTransient<IWorkDayRepository, WorkDayRepository>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

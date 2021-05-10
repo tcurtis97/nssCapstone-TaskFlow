@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import { JobProvider } from "./providers/JobProvider";
 import { AddressProvider } from "./providers/AddressProvider";
 import { NoteProvider } from "./providers/NoteProvider";
+import { WorkRecordProvider } from "./providers/WorkRecordProvider";
 
 function App() {
   return (
@@ -16,12 +17,14 @@ function App() {
       <UserProfileProvider>
         <JobProvider>
           <NoteProvider>
-            <CustomerProvider>
-              <AddressProvider>
-                <Header />
-                <ApplicationViews />
-              </AddressProvider>
-            </CustomerProvider>
+            <WorkRecordProvider>
+              <CustomerProvider>
+                <AddressProvider>
+                  <Header />
+                  <ApplicationViews />
+                </AddressProvider>
+              </CustomerProvider>
+            </WorkRecordProvider>
           </NoteProvider>
         </JobProvider>
       </UserProfileProvider>
