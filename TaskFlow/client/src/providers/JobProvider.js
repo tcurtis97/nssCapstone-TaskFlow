@@ -56,9 +56,9 @@ export const JobProvider = (props) => {
       }).then(getAllJobs)
     );
 
-  const CompleteJob = (jobId) =>
+  const CompleteJob = (Id) =>
     getToken().then((token) =>
-      fetch(`/api/job/${jobId}`, {
+      fetch(`/api/job/ComepleteJob${Id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -18,11 +18,10 @@ export const WorkRecordForm = () => {
 
   const { jobId } = useParams();
 
-  const [isLoading, setIsLoading] = useState(true);
-
   const history = useHistory();
   const { workRecordId } = useParams();
 
+  // function to take the values of the form fields and sets those values to state
   const handleControlledInputChange = (event) => {
     const newWorkRecord = { ...workRecord };
     let selectedVal = event.target.value;
@@ -35,12 +34,12 @@ export const WorkRecordForm = () => {
     setWorkRecord(newWorkRecord);
   };
 
+  // if there is an workRecordId in the url the function will run the updateWorkRecord and send a Put request,
+  // else the fucntion will run addWorkRecord and run a post request
   const handleClickSaveWorkRecord = () => {
     if (workRecord.NoteText === "" || workRecord.TimeOnJob === "") {
       window.alert("Please enter an WorkRecord");
     } else {
-      setIsLoading(true);
-
       if (workRecordId) {
         updateWorkRecord({
           id: workRecordId,
@@ -53,23 +52,19 @@ export const WorkRecordForm = () => {
           timeOnJob: workRecord.timeOnJob,
           JobId: jobId,
         }).then(() => history.push(`/job/${jobId}`));
-        // for (values of fields) {
-        //   addWorkRecord({
-        //     WorkRecord: values.value,
-        //   })
       }
     }
   };
 
+  // useEffect calls getAllWorkRecords and then if there is an workRecordId in the url, the workRecordId will be passed into getWorkRecordById and set the
+  // response to state for the edit feature to show the object being edited
   useEffect(() => {
     getAllWorkRecords().then(() => {
       if (workRecordId) {
         getWorkRecordById(workRecordId).then((c) => {
           setWorkRecord(c);
-          setIsLoading(false);
         });
       } else {
-        setIsLoading(false);
       }
     });
   }, []);
@@ -128,7 +123,6 @@ export const WorkRecordForm = () => {
             color: "black",
           }}
           className="add_button"
-          disabled={isLoading}
           onClick={(event) => {
             event.preventDefault();
             handleClickSaveWorkRecord();

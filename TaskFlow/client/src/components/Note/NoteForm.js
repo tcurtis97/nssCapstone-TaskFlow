@@ -5,9 +5,8 @@ import { NoteContext } from "../../providers/NoteProvider";
 import { useHistory, useParams } from "react-router-dom";
 
 export const NoteForm = () => {
-  const { addNote, getNoteById, updateNote, getAllNotes } = useContext(
-    NoteContext
-  );
+  const { addNote, getNoteById, updateNote, getAllNotes } =
+    useContext(NoteContext);
 
   const [note, setNote] = useState({
     Note: "",
@@ -15,11 +14,10 @@ export const NoteForm = () => {
 
   const { jobId } = useParams();
 
-  const [isLoading, setIsLoading] = useState(true);
-
   const history = useHistory();
   const { noteId } = useParams();
 
+  // function to take the values of the form fields and sets those values to state
   const handleControlledInputChange = (event) => {
     const newNote = { ...note };
     let selectedVal = event.target.value;
@@ -32,12 +30,12 @@ export const NoteForm = () => {
     setNote(newNote);
   };
 
+  // if there is an noteId in the url the function will run the updateNote and send a Put request,
+  // else the fucntion will run addNote and run a post request
   const handleClickSaveNote = () => {
     if (note.noteText === "") {
       window.alert("Please enter an Note");
     } else {
-      setIsLoading(true);
-
       if (noteId) {
         updateNote({
           id: noteId,
@@ -52,15 +50,15 @@ export const NoteForm = () => {
     }
   };
 
+  // useEffect calls getAllNotes and then if there is an noteId in the url, the noteId will be passed into getNoteById and set the
+  // response to state for the edit feature to show the object being edited
   useEffect(() => {
     getAllNotes().then(() => {
       if (noteId) {
         getNoteById(noteId).then((c) => {
           setNote(c);
-          setIsLoading(false);
         });
       } else {
-        setIsLoading(false);
       }
     });
   }, []);
@@ -101,7 +99,6 @@ export const NoteForm = () => {
             color: "black",
           }}
           className="add_button"
-          disabled={isLoading}
           onClick={(event) => {
             event.preventDefault();
             handleClickSaveNote();

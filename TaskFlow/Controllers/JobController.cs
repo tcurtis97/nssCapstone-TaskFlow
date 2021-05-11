@@ -107,17 +107,17 @@ namespace TaskFlow.Controllers
 
 
 
-        //[HttpDelete("{id}")]
-        //public IActionResult ComepleteJob(int id, DateTime complete)
-        //{
-        //    DateTime complete = DateTime.Now;
+        [HttpPut("ComepleteJob{id}")]
+        public IActionResult ComepleteJob(int id, DateTime complete)
+        {
+             complete = DateTime.Now;
 
-        //    {
-        //        _jobRepository.ComepleteJob(id);
-        //        return NoContent();
-        //    }
+            {
+                _jobRepository.ComepleteJob(id, complete);
+                return NoContent();
+            }
 
-        //}
+        }
 
         [HttpGet("GetAllUncompleteJobs")]
         public IActionResult GetAllUncompleteJobs()

@@ -96,12 +96,8 @@ const JobDetails = () => {
         ))}
       </CardHeader>
 
-      <Link to={`/note/add/${job.id}`}>
-        <Button type="button">Add Note</Button>
-      </Link>
-
       <Button variant="secondary" onClick={JobComplete} className="btn-primary">
-        Comeplete Job
+        Complete Job
       </Button>
     </div>
   );

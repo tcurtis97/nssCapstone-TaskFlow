@@ -5,41 +5,34 @@ import { CustomerContext } from "../../providers/CustomerProvider";
 import { useHistory, useParams } from "react-router-dom";
 
 export const CustomerForm = () => {
-  const {
-    addCustomer,
-    getCustomerById,
-    updateCustomer,
-    getAllCustomers,
-  } = useContext(CustomerContext);
+  const { addCustomer, getCustomerById, updateCustomer, getAllCustomers } =
+    useContext(CustomerContext);
 
   const [customer, setCustomer] = useState({
     Name: "",
     PhoneNumber: "",
   });
 
-  const [isLoading, setIsLoading] = useState(true);
-
   const history = useHistory();
   const { customerId } = useParams();
 
+  // function to take the values of the form fields and sets those values to state
   const handleControlledInputChange = (event) => {
     const newCustomer = { ...customer };
     let selectedVal = event.target.value;
     if (event.target.id.includes("Id")) {
       selectedVal = parseInt(selectedVal);
     }
-
     newCustomer[event.target.id] = selectedVal;
-
     setCustomer(newCustomer);
   };
 
+  // if there is an customerId in the url the function will run the updateCustomer and send a Put request,
+  // else the fucntion will run addCustomer and run a post request
   const handleClickSaveCustomer = () => {
     if (customer.name === "" || customer.phoneNumber === "") {
       window.alert("Please enter a name");
     } else {
-      setIsLoading(true);
-
       if (customerId) {
         updateCustomer({
           id: customerId,
@@ -55,15 +48,15 @@ export const CustomerForm = () => {
     }
   };
 
+  // useEffect calls getAllCustomers and then if there is an customerId in the url, the customerId will be passed into getCustomerById and set the
+  // response to state for the edit feature to show the object being edited
   useEffect(() => {
     getAllCustomers().then(() => {
       if (customerId) {
         getCustomerById(customerId).then((c) => {
           setCustomer(c);
-          setIsLoading(false);
         });
       } else {
-        setIsLoading(false);
       }
     });
   }, []);
@@ -123,7 +116,6 @@ export const CustomerForm = () => {
             color: "black",
           }}
           className="add_button"
-          disabled={isLoading}
           onClick={(event) => {
             event.preventDefault();
             handleClickSaveCustomer();

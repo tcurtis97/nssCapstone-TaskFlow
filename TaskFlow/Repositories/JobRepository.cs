@@ -314,7 +314,7 @@ namespace TaskFlow.Repositories
                 {
                     cmd.CommandText = @"
                         UPDATE Job
-                           SET  CompletionDate= @complete,
+                           SET  CompletionDate= @complete
                                
                          WHERE Id = @Id";
 
@@ -342,13 +342,19 @@ namespace TaskFlow.Repositories
                             c.Id AS CustomerId, c.[Name], c.PhoneNumber,
 
 
-                                 a.Id AS AddressId, a.CustomerId, a.Address
+                                 a.Id AS AddressId, a.CustomerId, a.Address,
+
+                         ISNULL( wd.UserProfileId, 0) as UserProfileId, ISNULL(wd.Id, 0) as WorkDayId, ISNULL(wd.JobId, 0) AS JobId,
+
+                         ISNULL( u.Id, 0) as UserProfileId, ISNULL(u.DisplayName, '') as DisplayName
 
 
 
                           FROM  Job j
                     LEFT JOIN Address a ON j.AddressId = a.Id
                      LEFT JOIN Customer c ON j.CustomerId = c.Id
+                       LEFT JOIN WorkDay wd on j.Id = wd.JobId
+                         LEFT JOIN UserProfile u ON wd.UserProfileId = u.Id
                             WHERE j.CompletionDate IS NULL
                     ";
 
@@ -376,6 +382,17 @@ namespace TaskFlow.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
                                 Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            WorkDay = new WorkDay()
+                            {
+                                Id = DbUtils.GetInt(reader, "WorkDayId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
+                            },
+                            userProfile = new UserProfile()
+                            {
+                                Id = DbUtils.GetInt(reader, "UserProfileId"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
                             },
 
                         });

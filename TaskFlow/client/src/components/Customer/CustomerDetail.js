@@ -75,7 +75,7 @@ const CustomerDetails = () => {
         <strong>Jobs:</strong>
         {jobs.map((j) => (
           <CustomerJob key={j.id} job={j} />
-        ))}{" "}
+        ))}
       </CardHeader>
     </div>
   );

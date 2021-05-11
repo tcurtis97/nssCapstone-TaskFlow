@@ -33,9 +33,15 @@ const Job = ({ job }) => {
         <p>
           <strong>Description : {job.description}</strong>
         </p>
-        <p>
-          <strong>{job.CompletionDate}</strong>
-        </p>
+
+        {job.completionDate !== "1900-01-01T00:00:00" ? (
+          <p>
+            <strong>{job.completionDate}</strong>
+          </p>
+        ) : (
+          <div> Job is Uncomplete</div>
+        )}
+
         <Link to={`/job/${job.id}`}>
           <Button type="button">Details</Button>
         </Link>
