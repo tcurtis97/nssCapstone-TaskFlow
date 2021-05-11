@@ -5,10 +5,12 @@ import { CustomerContext } from "../../providers/CustomerProvider";
 import { AddressContext } from "../../providers/AddressProvider";
 import { useHistory, useParams } from "react-router-dom";
 
-export const JobForm = () => {
+export const JobEdit = () => {
   const { addJob, getJobById, updateJob, getAllJobs } = useContext(JobContext);
   const { customers, getAllCustomers } = useContext(CustomerContext);
   const { GetAllAddressesByCustomerId } = useContext(AddressContext);
+
+  const { jobId } = useParams();
 
   const [Addresses, SetAddresses] = useState([
     {
@@ -47,7 +49,7 @@ export const JobForm = () => {
     if (job.description === "" || job.customerId === 0 || job.addressId === 0) {
       window.alert("Please enter a Descritpion");
     } else {
-      addJob({
+      updateJob({
         description: job.description,
         customerId: job.customerId,
         addressId: job.addressId,
@@ -59,11 +61,11 @@ export const JobForm = () => {
     getAllCustomers();
   }, []);
 
-  // useEffect(() => {
-  //   GetAllAddressesByCustomerId(job.customerId).then((response) => {
-  //     SetAddresses(response);
-  //   });
-  // }, []);
+  useEffect(() => {
+    getJobById(jobId).then((j) => {
+      setJob(j);
+    });
+  }, []);
 
   const getAddresses = () => {
     console.log("Hello world");
@@ -75,7 +77,7 @@ export const JobForm = () => {
 
   return (
     <Form className="customerForm">
-      <h2 className="customerForm__title">Add Job</h2>
+      <h2 className="customerForm__title">Save Job</h2>
 
       <Button
         variant

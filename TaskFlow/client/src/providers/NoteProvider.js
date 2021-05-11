@@ -68,6 +68,17 @@ export const NoteProvider = (props) => {
     );
   };
 
+  const GetAllNotesByJobId = (id) => {
+    return getToken().then((token) =>
+      fetch(`/api/note/GetAllNotesByJobId${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json())
+    );
+  };
+
   return (
     <NoteContext.Provider
       value={{
@@ -77,6 +88,7 @@ export const NoteProvider = (props) => {
         deleteNote,
         updateNote,
         getNoteById,
+        GetAllNotesByJobId,
       }}
     >
       {props.children}

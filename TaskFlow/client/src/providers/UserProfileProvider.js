@@ -78,9 +78,27 @@ export function UserProfileProvider(props) {
     );
   };
 
+  const getUserProfileById = () => {
+    return getToken().then((token) =>
+      fetch("/api/userprofile", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json())
+    );
+  };
+
   return (
     <UserProfileContext.Provider
-      value={{ isLoggedIn, login, logout, register, getToken }}
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+        register,
+        getToken,
+        getUserProfileById,
+      }}
     >
       {isFirebaseReady ? (
         props.children

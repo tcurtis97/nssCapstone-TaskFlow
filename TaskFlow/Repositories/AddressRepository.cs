@@ -21,14 +21,14 @@ namespace TaskFlow.Repositories
                     cmd.CommandText = @"
                  SELECT  Id, CustomerId, Address
                           FROM  Address
-                      ORDER BY  Name";
+                     ";
 
                     var reader = cmd.ExecuteReader();
 
-                    var addresss = new List<CustomerAddress>();
+                    var addresses = new List<CustomerAddress>();
                     while (reader.Read())
                     {
-                        addresss.Add(new CustomerAddress()
+                        addresses.Add(new CustomerAddress()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
                             CustomerId = DbUtils.GetInt(reader, "CustomerId"),
@@ -39,13 +39,46 @@ namespace TaskFlow.Repositories
 
                     reader.Close();
 
-                    return addresss;
+                    return addresses;
                 }
             }
         }
 
 
+        public CustomerAddress GetById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                          SELECT Id, CustomerId, Address
+                          FROM  Address
+                           WHERE Id = @Id";
 
+                    DbUtils.AddParameter(cmd, "@Id", id);
+
+                    var reader = cmd.ExecuteReader();
+
+                    CustomerAddress address = null;
+                    if (reader.Read())
+                    {
+                        address = new CustomerAddress()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            Address = DbUtils.GetString(reader, "Address"),
+
+                        };
+                    }
+
+                    reader.Close();
+
+                    return address;
+                }
+            }
+        }
 
 
         public void Add(CustomerAddress address)
@@ -66,6 +99,8 @@ namespace TaskFlow.Repositories
                 }
             }
         }
+
+
 
         public void Delete(int addressId)
         {
@@ -103,7 +138,40 @@ namespace TaskFlow.Repositories
             }
         }
 
+        public List<CustomerAddress> GetAllAddressesByCustomerId(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT  a.Id, a.CustomerId, a.Address
+                                        
 
+                                        FROM Address a
+                                        LEFT JOIN Customer c on c.id = a.customerId
+                                        WHERE a.CustomerId = @id
+                                        ";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    var reader = cmd.ExecuteReader();
+                    var addresses = new List<CustomerAddress>();
+                    while (reader.Read())
+                    {
+                        addresses.Add(new CustomerAddress()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            Address = DbUtils.GetString(reader, "Address"),
+                        });
+                    }
+
+                    reader.Close();
+
+                    return addresses;
+                }
+            }
+        }
 
 
 

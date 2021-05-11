@@ -12,7 +12,7 @@ const JobList = () => {
     viewingUncomplete,
     getUncompleteJobs,
   } = useContext(JobContext);
-  console.log(jobs);
+  console.log(jobs, "jobs");
 
   useEffect(() => {
     getAllJobs();
@@ -29,6 +29,7 @@ const JobList = () => {
   return (
     <section>
       <div>
+        {viewingUncomplete ? <h1>Uncomplete Jobs</h1> : <h1>All Jobs</h1>}
         {viewingUncomplete ? (
           <Button
             color="success"

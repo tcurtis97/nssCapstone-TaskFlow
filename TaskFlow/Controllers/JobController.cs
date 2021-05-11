@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using TaskFlow.Models;
 using TaskFlow.Repositories;
@@ -16,9 +17,11 @@ namespace TaskFlow.Controllers
     public class JobController : ControllerBase
     {
         private readonly IJobRepository _jobRepository;
-        public JobController(IJobRepository jobRepository)
+        private readonly IUserProfileRepository _userProfileRepository;
+        public JobController(IJobRepository jobRepository, IUserProfileRepository userProfileRepository)
         {
             _jobRepository = jobRepository;
+            _userProfileRepository = userProfileRepository;
         }
 
         [HttpGet]
@@ -41,6 +44,8 @@ namespace TaskFlow.Controllers
         [HttpPost]
         public IActionResult Post(Job job)
         {
+            job.CreateDate = DateTime.Now;
+
             _jobRepository.Add(job);
             return CreatedAtAction(nameof(Get), new { id = job.Id }, job);
         }
@@ -75,8 +80,57 @@ namespace TaskFlow.Controllers
             return Ok(job);
         }
 
+        [HttpGet("GetAllJobsByCustomerId{id}")]
+        public IActionResult GetAllJobsByCustomerId(int id)
+        {
+            var job = _jobRepository.GetAllJobsByCustomerId(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            return Ok(job);
+        }
 
 
+        [HttpGet("GetJobsByWorkDayUser")]
+        public IActionResult GetJobsByWorkDayUser()
+        {
+            var currentUserProfile = GetCurrentUserProfile();
+            int userId = currentUserProfile.Id;
+            var job = _jobRepository.GetJobsByWorkDayUser(userId);
+            if (job == null)
+            {
+                return NotFound();
+            }
+            return Ok(job);
+        }
+
+
+
+        [HttpPut("ComepleteJob{id}")]
+        public IActionResult ComepleteJob(int id, DateTime complete)
+        {
+             complete = DateTime.Now;
+
+            {
+                _jobRepository.ComepleteJob(id, complete);
+                return NoContent();
+            }
+
+        }
+
+        [HttpGet("GetAllUncompleteJobs")]
+        public IActionResult GetAllUncompleteJobs()
+        {
+            return Ok(_jobRepository.GetAllUncompleteJobs());
+        }
+
+
+        private UserProfile GetCurrentUserProfile()
+        {
+            var firebaseUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return _userProfileRepository.GetByFirebaseUserId(firebaseUserId);
+        }
 
 
 

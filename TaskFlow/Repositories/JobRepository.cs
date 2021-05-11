@@ -25,13 +25,19 @@ namespace TaskFlow.Repositories
                             c.Id AS CustomerId, c.[Name], c.PhoneNumber,
 
 
-                                 a.Id AS AddressId, a.CustomerId, a.Address
+                                 a.Id AS AddressId, a.CustomerId, a.Address,
 
+                         
+                        ISNULL( wd.UserProfileId, 0) as UserProfileId, ISNULL(wd.Id, 0) as WorkDayId, ISNULL(wd.JobId, 0) AS JobId,
+
+                         ISNULL( u.Id, 0) as UserProfileId, ISNULL(u.DisplayName, '') as DisplayName
 
 
                           FROM  Job j
+                    LEFT JOIN WorkDay wd on j.Id = wd.JobId
                     LEFT JOIN Address a ON j.AddressId = a.Id
                      LEFT JOIN Customer c ON j.CustomerId = c.Id
+                    LEFT JOIN UserProfile u ON wd.UserProfileId = u.Id
                     ";
 
                     var reader = cmd.ExecuteReader();
@@ -42,7 +48,7 @@ namespace TaskFlow.Repositories
                         jobs.Add(new Job()
                         {
                             Id = DbUtils.GetInt(reader, "Id"),
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -57,6 +63,17 @@ namespace TaskFlow.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
                                 Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            WorkDay = new WorkDay()
+                            {
+                                Id = DbUtils.GetInt(reader, "WorkDayId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
+                            },
+                            userProfile = new UserProfile()
+                            {
+                                Id = DbUtils.GetInt(reader, "UserProfileId"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
                             },
 
                         });
@@ -77,8 +94,9 @@ namespace TaskFlow.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                         SELECT  Id, Description, ImageUrl, CompletionDate, CreateDate, CustomerId
-                          FROM  Job
+                         SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate,
+                           j.CreateDate, j.CustomerId, j.AddressId
+                          FROM  Job j
                     WHERE Id = @Id";
 
                     DbUtils.AddParameter(cmd, "@Id", id);
@@ -91,7 +109,7 @@ namespace TaskFlow.Repositories
                         job = new Job()
                         {
                             Id = id,
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -116,14 +134,16 @@ namespace TaskFlow.Repositories
                 conn.Open();
                 using (var cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"INSERT INTO Job (Description, ImageUrl, CompletionDate, CreateDate, CustomerId)
+                    cmd.CommandText = @"INSERT INTO Job (Description, ImageUrl, CreateDate, CustomerId, AddressId)
                                         OUTPUT INSERTED.ID
-                                        VALUES (@Description, @ImageUrl, @CompletionDate, @CreateDate, @CustomerId)";
-                    DbUtils.AddParameter(cmd, "@Description", job.Descritpion);
+                                        VALUES (@Description, @ImageUrl, @CreateDate, @CustomerId, @AddressId)";
+                    DbUtils.AddParameter(cmd, "@Description", job.Description);
                     DbUtils.AddParameter(cmd, "@ImageUrl", job.ImageUrl);
-                    DbUtils.AddParameter(cmd, "@CompletionDate", job.CompletionDate);
+        
                     DbUtils.AddParameter(cmd, "@CreateDate", job.CreateDate);
                     DbUtils.AddParameter(cmd, "@CustomerId", job.CustomerId);
+                    DbUtils.AddParameter(cmd, "@AddressId", job.AddressId);
+
 
 
                     job.Id = (int)cmd.ExecuteScalar();
@@ -161,17 +181,19 @@ namespace TaskFlow.Repositories
                                 CustomerId = @CustomerId
                          WHERE Id = @Id";
 
-                    DbUtils.AddParameter(cmd, "@Description", job.Descritpion);
+                    DbUtils.AddParameter(cmd, "@Description", job.Description);
                     DbUtils.AddParameter(cmd, "@ImageUrl", job.ImageUrl);
                     DbUtils.AddParameter(cmd, "@CompletionDate", job.CompletionDate);
                     DbUtils.AddParameter(cmd, "@CreateDate", job.CreateDate);
                     DbUtils.AddParameter(cmd, "@CustomerId", job.CustomerId);
+                    DbUtils.AddParameter(cmd, "@AddressId", job.AddressId);
                     DbUtils.AddParameter(cmd, "@Id", job.Id);
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
+
 
 
         public Job GetJobByIdWithDetails(int id)
@@ -211,12 +233,12 @@ namespace TaskFlow.Repositories
                         job = new Job()
                         {
                             Id = id,
-                            Descritpion = DbUtils.GetString(reader, "Description"),
+                            Description = DbUtils.GetString(reader, "Description"),
                             ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                             CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                             CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
                             CustomerId = DbUtils.GetInt(reader, "CustomerId"),
-                            notes = new List<Note>(),
+                          
                             Address = new CustomerAddress()
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
@@ -231,17 +253,7 @@ namespace TaskFlow.Repositories
                             },
                         };
 
-                        if (DbUtils.IsNotDbNull(reader, "NoteId"))
-                        {
-                            job.notes.Add(new Note()
-                            {
-                                Id = DbUtils.GetInt(reader, "NoteId"),
-                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
-                                JobId = DbUtils.GetInt(reader, "JobId"),
-                                CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
-                                NoteText = DbUtils.GetString(reader, "NoteText"),
-                            });
-                        }
+                      
 
 
 
@@ -254,6 +266,211 @@ namespace TaskFlow.Repositories
             }
         }
 
+        public List<Job> GetAllJobsByCustomerId(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"SELECT   j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, 
+                                 ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId
+                                        
+
+                                        FROM Job j
+                                        LEFT JOIN Customer c on c.id = j.CustomerId
+                                        WHERE j.CustomerId = @id
+                                        ";
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    var reader = cmd.ExecuteReader();
+                    var jobs = new List<Job>();
+                    while (reader.Read())
+                    {
+                        jobs.Add(new Job()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Description = DbUtils.GetString(reader, "Description"),
+                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                            CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                        });
+                    }
+
+                    reader.Close();
+
+                    return jobs;
+                }
+            }
+        }
+
+        public void ComepleteJob(int id, DateTime complete)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE Job
+                           SET  CompletionDate= @complete
+                               
+                         WHERE Id = @Id";
+
+                    
+                    DbUtils.AddParameter(cmd, "@Id", id);
+                    DbUtils.AddParameter(cmd, "@complete", complete);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+        public List<Job> GetAllUncompleteJobs()
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                 SELECT   j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate,
+                           j.CreateDate, j.CustomerId, j.AddressId,
+
+                            c.Id AS CustomerId, c.[Name], c.PhoneNumber,
+
+
+                                 a.Id AS AddressId, a.CustomerId, a.Address,
+
+                         ISNULL( wd.UserProfileId, 0) as UserProfileId, ISNULL(wd.Id, 0) as WorkDayId, ISNULL(wd.JobId, 0) AS JobId,
+
+                         ISNULL( u.Id, 0) as UserProfileId, ISNULL(u.DisplayName, '') as DisplayName
+
+
+
+                          FROM  Job j
+                    LEFT JOIN Address a ON j.AddressId = a.Id
+                     LEFT JOIN Customer c ON j.CustomerId = c.Id
+                       LEFT JOIN WorkDay wd on j.Id = wd.JobId
+                         LEFT JOIN UserProfile u ON wd.UserProfileId = u.Id
+                            WHERE j.CompletionDate IS NULL
+                    ";
+
+                    var reader = cmd.ExecuteReader();
+
+                    var jobs = new List<Job>();
+                    while (reader.Read())
+                    {
+                        jobs.Add(new Job()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Description = DbUtils.GetString(reader, "Description"),
+                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                            CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            AddressId = DbUtils.GetInt(reader, "AddressId"),
+                            Customer = new Customer()
+                            {
+                                Id = DbUtils.GetInt(reader, "CustomerId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                            },
+                            Address = new CustomerAddress()
+                            {
+                                Id = DbUtils.GetInt(reader, "AddressId"),
+                                Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            WorkDay = new WorkDay()
+                            {
+                                Id = DbUtils.GetInt(reader, "WorkDayId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
+                            },
+                            userProfile = new UserProfile()
+                            {
+                                Id = DbUtils.GetInt(reader, "UserProfileId"),
+                                DisplayName = DbUtils.GetString(reader, "DisplayName"),
+                            },
+
+                        });
+                    }
+
+                    reader.Close();
+
+                    return jobs;
+                }
+            }
+        }
+
+        public List<Job> GetJobsByWorkDayUser(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT  j.Id, j.Description, ISNULL(j.ImageUrl, '') as ImageUrl, ISNULL(j.CompletionDate, '') as CompletionDate,
+                           j.CreateDate, j.CustomerId, j.AddressId, wd.UserProfileId, wd.Id AS WorkDayId, wd.JobId,
+
+                                       c.Id AS CustomerId, c.[Name], c.PhoneNumber,
+
+
+                                 a.Id AS AddressId, a.CustomerId, a.Address
+      
+                        FROM    Job j
+                                LEFT JOIN WorkDay wd on j.Id = wd.JobId
+                                LEFT JOIN Address a ON j.AddressId = a.Id
+                                LEFT JOIN Customer c ON j.CustomerId = c.Id
+                        WHERE wd.UserProfileId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    var reader = cmd.ExecuteReader();
+
+                    List<Job> jobs = new List<Job>();
+
+                    while (reader.Read())
+                    {
+                        jobs.Add(new Job()
+                        {
+                            Id = DbUtils.GetInt(reader, "Id"),
+                            Description = DbUtils.GetString(reader, "Description"),
+                            ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
+                            CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
+                            CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
+                            CustomerId = DbUtils.GetInt(reader, "CustomerId"),
+                            AddressId = DbUtils.GetInt(reader, "AddressId"),
+                            WorkDay = new WorkDay()
+                            {
+                                Id = DbUtils.GetInt(reader, "WorkDayId"),
+                                UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                JobId = DbUtils.GetInt(reader, "JobId"),
+                            },
+                            Address = new CustomerAddress()
+                            {
+                                Id = DbUtils.GetInt(reader, "AddressId"),
+                                Address = DbUtils.GetString(reader, "Address"),
+                            },
+                            Customer = new Customer()
+                            {
+                                Id = DbUtils.GetInt(reader, "CustomerId"),
+                                Name = DbUtils.GetString(reader, "Name"),
+                                PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                            },
+
+                        });
+
+                    }
+
+                    reader.Close();
+                    return jobs;
+                }
+            }
+        }
 
 
 

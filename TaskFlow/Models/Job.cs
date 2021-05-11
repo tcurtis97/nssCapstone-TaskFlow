@@ -12,7 +12,9 @@ namespace TaskFlow.Models
 
         public int CustomerId { get; set; }
 
-        public string Descritpion { get; set; }
+        public int AddressId { get; set; }
+
+        public string Description { get; set; }
 
         public string ImageUrl { get; set; }
 
@@ -25,6 +27,10 @@ namespace TaskFlow.Models
 
         public CustomerAddress Address { get; set; }
 
+        public WorkDay WorkDay { get; set; }
+
         public List<Note> notes;
+
+        public UserProfile userProfile { get; set; }
     }
 }
