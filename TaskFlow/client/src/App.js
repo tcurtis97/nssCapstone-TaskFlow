@@ -7,16 +7,28 @@ import ApplicationViews from "./components/ApplicationViews";
 import { CustomerProvider } from "./providers/CustomerProvider";
 import Header from "./components/Header";
 import { JobProvider } from "./providers/JobProvider";
+import { AddressProvider } from "./providers/AddressProvider";
+import { NoteProvider } from "./providers/NoteProvider";
+import { WorkRecordProvider } from "./providers/WorkRecordProvider";
+import { WorkDayProvider } from "./providers/WorkDayProvider";
 
 function App() {
   return (
     <Router>
       <UserProfileProvider>
         <JobProvider>
-          <CustomerProvider>
-            <Header />
-            <ApplicationViews />
-          </CustomerProvider>
+          <NoteProvider>
+            <WorkRecordProvider>
+              <CustomerProvider>
+                <AddressProvider>
+                  <WorkDayProvider>
+                    <Header />
+                    <ApplicationViews />
+                  </WorkDayProvider>
+                </AddressProvider>
+              </CustomerProvider>
+            </WorkRecordProvider>
+          </NoteProvider>
         </JobProvider>
       </UserProfileProvider>
     </Router>

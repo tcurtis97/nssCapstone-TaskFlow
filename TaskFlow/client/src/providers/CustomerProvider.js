@@ -6,6 +6,7 @@ export const CustomerContext = React.createContext();
 export const CustomerProvider = (props) => {
   const { getToken } = useContext(UserProfileContext);
   const [customers, setCustomers] = useState([]);
+
   const [customersWithAddress, setCustomersWithAddress] = useState([]);
   const [searchTerms, setSearchTerms] = useState("");
 

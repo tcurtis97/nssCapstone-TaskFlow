@@ -68,6 +68,17 @@ export const AddressProvider = (props) => {
     );
   };
 
+  const GetAllAddressesByCustomerId = (id) => {
+    return getToken().then((token) =>
+      fetch(`/api/address/GetAllAddressesByCustomerId${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((res) => res.json())
+    );
+  };
+
   return (
     <AddressContext.Provider
       value={{
@@ -77,6 +88,7 @@ export const AddressProvider = (props) => {
         deleteAddress,
         updateAddress,
         getAddressById,
+        GetAllAddressesByCustomerId,
       }}
     >
       {props.children}

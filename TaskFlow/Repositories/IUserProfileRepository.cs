@@ -11,5 +11,9 @@ namespace TaskFlow.Repositories
         void Add(UserProfile userProfile);
         UserProfile GetByFirebaseUserId(string firebaseUserId);
 
+        UserProfile GetUserProfileById(int id);
+
+        List<UserProfile> GetAllUsers();
+
     }
 }

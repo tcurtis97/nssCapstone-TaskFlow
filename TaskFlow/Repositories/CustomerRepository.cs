@@ -191,9 +191,10 @@ namespace TaskFlow.Repositories
                                  ISNULL(j.CompletionDate, '') as CompletionDate, j.CreateDate, j.CustomerId
                             
                             FROM Customer c
-                            LEFT JOIN Address a ON a.CustomerId = c.Id
+                             LEFT JOIN Address a ON a.CustomerId = c.Id
                             LEFT JOIN Job j ON j.CustomerId = c.Id
-                           WHERE c.Id = @Id";
+                           WHERE c.Id = @Id
+                             ";
 
                     DbUtils.AddParameter(cmd, "@Id", id);
 
@@ -217,7 +218,7 @@ namespace TaskFlow.Repositories
                             {
                                 Id = DbUtils.GetInt(reader, "AddressId"),
                                 Address = DbUtils.GetString(reader, "Address"),
-                                CustomerId = id,
+                                
 
                             });
                         }
@@ -227,7 +228,7 @@ namespace TaskFlow.Repositories
                                 customer.Jobs.Add(new Job()
                                 {
                                     Id = DbUtils.GetInt(reader, "JobId"),
-                                    Descritpion = DbUtils.GetString(reader, "Description"),
+                                    Description = DbUtils.GetString(reader, "Description"),
                                     ImageUrl = DbUtils.GetString(reader, "ImageUrl"),
                                     CompletionDate = DbUtils.GetDateTime(reader, "CompletionDate"),
                                     CreateDate = DbUtils.GetDateTime(reader, "CreateDate"),
@@ -260,8 +261,8 @@ namespace TaskFlow.Repositories
                                  a.Id AS AddressId, a.CustomerId, a.Address
 
                           FROM  Customer c
-                          LEFT JOIN Address a ON a.CustomerId = c.Id
-                      ORDER BY  Name";
+                           JOIN Address a ON a.CustomerId = c.Id
+                      ";
 
                     var reader = cmd.ExecuteReader();
 

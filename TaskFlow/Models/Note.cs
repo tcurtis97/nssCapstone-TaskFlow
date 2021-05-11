@@ -13,8 +13,12 @@ namespace TaskFlow.Models
 
         public int JobId { get; set; }
 
-        public DateTime Date { get; set; }
+        public DateTime CreateDate { get; set; }
 
         public string NoteText { get; set; }
+
+        public UserProfile userProfile { get; set; }
+
+
     }
 }
