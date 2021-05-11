@@ -15,7 +15,7 @@ const CustomerJob = ({ job }) => {
   return (
     <Card className="m-4">
       <CardHeader>
-        <strong>{job.descritpion}</strong>
+        <strong>{job.description}</strong>
       </CardHeader>
       <CardBody>
         <CardText>{job.createDate}</CardText>
