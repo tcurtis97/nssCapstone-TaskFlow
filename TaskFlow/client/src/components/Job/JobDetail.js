@@ -44,7 +44,7 @@ const JobDetails = () => {
   }, []);
 
   const JobComplete = () => {
-    CompleteJob(job.id);
+    CompleteJob(job.id).then(history.push(`/job`));
   };
 
   if (!job) {
